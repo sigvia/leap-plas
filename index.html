@@ -142,11 +142,10 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-600 mb-1.5">テスト形式</label>
                         <select id="test-mode" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                            <option value="fill">例文穴埋めテスト (記述)</option>
-                            <option value="jp-to-en">日本語から英語 (記述)</option>
-                            <option value="en-to-jp">英語から日本語 (記述)</option>
-                            <option value="choice-jp-to-en">4択：日本語から英語 (選択)</option>
-                            <option value="choice-en-to-jp">4択：英語から日本語 (選択)</option>
+                            <option value="choice-en-to-jp">英語から日本語 (選択)</option>
+                            <option value="choice-jp-to-en">日本語から英語 (選択)</option>
+                            <option value="jp-to-en">日本語から英語 (書き取り)</option>
+                            <option value="fill">日本語分から穴埋め (例文)</option>
                         </select>
                     </div>
 
@@ -216,8 +215,10 @@
 
                     <div id="test-feedback" class="hidden p-4 rounded-xl text-sm font-medium"></div>
 
-                    <div class="flex justify-end pt-2">
-                        <button id="test-next-btn" onclick="nextTestQuestion()" class="hidden bg-slate-800 hover:bg-slate-900 text-white px-6 py-2.5 rounded-xl font-medium text-sm transition shadow-sm">次の問題へ &rarr;</button>
+                    <!-- 前へ・次へボタン -->
+                    <div class="flex justify-between items-center pt-2">
+                        <button id="test-prev-btn" onclick="prevTestQuestion()" class="hidden bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 px-5 py-2.5 rounded-xl font-medium text-sm transition shadow-sm">&larr; 前の問題</button>
+                        <button id="test-next-btn" onclick="nextTestQuestion()" class="hidden bg-slate-800 hover:bg-slate-900 text-white px-6 py-2.5 rounded-xl font-medium text-sm transition shadow-sm ml-auto">次の問題へ &rarr;</button>
                     </div>
                 </div>
 
@@ -336,7 +337,6 @@
         function updateRangeSelectors() {
             const words = window.wordManager.getWords();
             const ranges = [];
-            // 3Dカードの範囲を広げるため、50個刻み（または単語数に応じた大きい単位）に変更
             const step = Math.max(20, Math.floor(words.length / 5) || 20);
             for (let i = 0; i < words.length; i += step) {
                 const chunk = words.slice(i, i + step);
@@ -346,7 +346,6 @@
                 ranges.push({ start, end, label: `No. ${start} 〜 ${end}` });
             }
 
-            // リスト用の範囲セレクター (5個刻みなど細かいものが必要であればそのまま、今回は共通または広めに設定)
             ['filter-range'].forEach(selectId => {
                 const el = document.getElementById(selectId);
                 if (!el) return;
@@ -361,7 +360,6 @@
                 el.value = currentVal;
             });
 
-            // 3Dカード用の範囲セレクター（広い範囲）
             ['fc-range'].forEach(selectId => {
                 const el = document.getElementById(selectId);
                 if (!el) return;
@@ -385,7 +383,6 @@
                 list = words.filter(w => w.id >= start && w.id <= end);
             }
 
-            // 単語検索ボックスの処理
             const searchInput = document.getElementById('search-input');
             if (searchInput && searchInput.value.trim() !== '') {
                 const query = searchInput.value.trim().toLowerCase();
@@ -632,8 +629,9 @@
         let testQuestions = [];
         let testIndex = 0;
         let testCorrectCount = 0;
+        let testHistory = {}; // 既に回答した問題の履歴を保持 { index: { answered: true, isCorrect: true, userAnswer: '...' } }
         let isAnswerLocked = false;
-        let currentTestMode = 'fill';
+        let currentTestMode = 'choice-en-to-jp';
 
         function resetToTestConfig() {
             document.getElementById('test-config-area').classList.remove('hidden');
@@ -662,17 +660,41 @@
                         const rate = total > 0 ? c / total : 0;
 
                         if (!lowAccMode || total === 0 || rate < 0.7) {
-                            pool.push({
-                                wordId: w.id,
-                                word: w.word,
-                                sentence: ex.sentence,
-                                translation: ex.translation,
-                                correctAnswer: (ex.sentence.match(/\[(.*?)\]/) || [])[1] || ''
-                            });
+                            const match = ex.sentence.match(/\[(.*?)\]/);
+                            const ans = match ? match[1] : '';
+                            if (ans) {
+                                pool.push({
+                                    wordId: w.id,
+                                    word: w.word,
+                                    exampleId: ex.id,
+                                    sentence: ex.sentence,
+                                    translation: ex.translation,
+                                    correctAnswer: ans.trim()
+                                });
+                            }
                         }
                     });
                 });
-            } else if (currentTestMode === 'jp-to-en' || currentTestMode === 'choice-jp-to-en') {
+            } else if (currentTestMode === 'jp-to-en') {
+                targetWords.forEach(w => {
+                    const c = w.correctCount || 0;
+                    const inc = w.incorrectCount || 0;
+                    const total = c + inc;
+                    const rate = total > 0 ? c / total : 0;
+
+                    if (!lowAccMode || total === 0 || rate < 0.7) {
+                        const targetExId = (w.examples && w.examples.length > 0) ? w.examples[0].id : null;
+                        pool.push({
+                            wordId: w.id,
+                            word: w.word,
+                            exampleId: targetExId,
+                            sentence: w.meaning,
+                            translation: `見出し語 No. ${w.id}`,
+                            correctAnswer: w.word.trim()
+                        });
+                    }
+                });
+            } else if (currentTestMode === 'choice-jp-to-en') {
                 targetWords.forEach(w => {
                     const c = w.correctCount || 0;
                     const inc = w.incorrectCount || 0;
@@ -684,17 +706,19 @@
                         const shuffledOthers = [...otherWords].sort(() => Math.random() - 0.5).slice(0, 3);
                         const choices = [w.word, ...shuffledOthers.map(item => item.word)].sort(() => Math.random() - 0.5);
 
+                        const targetExId = (w.examples && w.examples.length > 0) ? w.examples[0].id : null;
                         pool.push({
                             wordId: w.id,
                             word: w.word,
+                            exampleId: targetExId,
                             sentence: w.meaning,
                             translation: `見出し語 No. ${w.id}`,
-                            correctAnswer: w.word,
+                            correctAnswer: w.word.trim(),
                             choices: choices
                         });
                     }
                 });
-            } else if (currentTestMode === 'en-to-jp' || currentTestMode === 'choice-en-to-jp') {
+            } else if (currentTestMode === 'choice-en-to-jp') {
                 targetWords.forEach(w => {
                     const c = w.correctCount || 0;
                     const inc = w.incorrectCount || 0;
@@ -706,12 +730,14 @@
                         const shuffledOthers = [...otherWords].sort(() => Math.random() - 0.5).slice(0, 3);
                         const choices = [w.meaning, ...shuffledOthers.map(item => item.meaning)].sort(() => Math.random() - 0.5);
 
+                        const targetExId = (w.examples && w.examples.length > 0) ? w.examples[0].id : null;
                         pool.push({
                             wordId: w.id,
                             word: w.word,
+                            exampleId: targetExId,
                             sentence: w.word,
                             translation: `品詞・意味を選べ`,
-                            correctAnswer: w.meaning,
+                            correctAnswer: w.meaning.trim(),
                             choices: choices
                         });
                     }
@@ -734,6 +760,7 @@
 
             testIndex = 0;
             testCorrectCount = 0;
+            testHistory = {};
             isAnswerLocked = false;
 
             document.getElementById('test-config-area').classList.add('hidden');
@@ -751,7 +778,8 @@
             }
 
             const q = testQuestions[testIndex];
-            isAnswerLocked = false;
+            const history = testHistory[testIndex]; // 既に回答済みかどうか
+            isAnswerLocked = history ? history.answered : false;
 
             document.getElementById('test-progress-text').textContent = `問題 ${testIndex + 1} / ${testQuestions.length}`;
 
@@ -760,6 +788,15 @@
             const translationEl = document.getElementById('test-translation');
             const inputArea = document.getElementById('input-area');
             const choiceArea = document.getElementById('choice-area');
+            const feedback = document.getElementById('test-feedback');
+            const prevBtn = document.getElementById('test-prev-btn');
+
+            // 前へボタンの表示切り替え（最初の問題でなければ表示）
+            if (testIndex > 0) {
+                prevBtn.classList.remove('hidden');
+            } else {
+                prevBtn.classList.add('hidden');
+            }
 
             const isChoice = currentTestMode.startsWith('choice-');
 
@@ -767,19 +804,28 @@
                 inputArea.classList.add('hidden');
                 choiceArea.classList.remove('hidden');
 
-                if (currentTestMode === 'choice-jp-to-en') {
-                    promptTitleEl.textContent = `【4択：日本語から英語】 No. ${q.wordId}`;
+                if (currentTestMode === 'choice-en-to-jp') {
+                    promptTitleEl.textContent = `【英語から日本語（選択）】 No. ${q.wordId}`;
                     sentenceDisplayEl.textContent = q.sentence;
-                    translationEl.textContent = "この意味に合う英単語を選んでください";
+                    translationEl.textContent = history ? "（解答済み：確認モード）" : "この単語の意味を選んでください (1〜4キーも使えます)";
                 } else {
-                    promptTitleEl.textContent = `【4択：英語から日本語】 No. ${q.wordId}`;
+                    promptTitleEl.textContent = `【日本語から英語（選択）】 No. ${q.wordId}`;
                     sentenceDisplayEl.textContent = q.sentence;
-                    translationEl.textContent = "この単語の意味を選んでください";
+                    translationEl.textContent = history ? "（解答済み：確認モード）" : "この意味に合う英単語を選んでください (1〜4キーも使えます)";
                 }
 
                 let choicesHtml = '';
                 q.choices.forEach((choice, idx) => {
-                    choicesHtml += `<button onclick="submitChoiceAnswer('${choice.replace(/'/g, "\\'")}')" class="choice-btn bg-white hover:bg-indigo-50 border border-slate-200 text-slate-800 font-medium p-4 rounded-xl text-left transition shadow-sm text-base flex items-center justify-between"><span><strong class="text-indigo-600 mr-2">${idx + 1}.</strong> ${choice}</span></button>`;
+                    let btnStyle = "bg-white hover:bg-indigo-50 border border-slate-200 text-slate-800";
+                    if (history) {
+                        // 履歴がある場合の色分け
+                        if (choice === q.correctAnswer) {
+                            btnStyle = "bg-emerald-100 border-emerald-400 text-emerald-900 font-bold";
+                        } else if (choice === history.userAnswer && !history.isCorrect) {
+                            btnStyle = "bg-rose-100 border-rose-400 text-rose-900";
+                        }
+                    }
+                    choicesHtml += `<button ${history ? 'disabled' : ''} onclick="submitChoiceAnswer('${choice.replace(/'/g, "\\'")}')" class="choice-btn ${btnStyle} font-medium p-4 rounded-xl text-left transition shadow-sm text-base flex items-center justify-between"><span><strong class="text-indigo-600 mr-2">${idx + 1}.</strong> ${choice}</span></button>`;
                 });
                 choiceArea.innerHTML = choicesHtml;
 
@@ -788,63 +834,103 @@
                 choiceArea.classList.add('hidden');
 
                 if (currentTestMode === 'fill') {
-                    promptTitleEl.textContent = `【例文穴埋め】 No. ${q.wordId}`;
-                    const maskedTarget = q.correctAnswer.length > 0 ? q.correctAnswer[0] + '─'.repeat(Math.max(0, q.correctAnswer.length - 1)) : '───';
-                    sentenceDisplayEl.innerHTML = q.sentence.replace(/\[(.*?)\]/g, `<span class="bg-indigo-50 border-b-2 border-indigo-600 px-2 py-0.5 text-indigo-700 font-mono font-bold">${maskedTarget}</span>`);
-                    translationEl.textContent = q.translation;
+                    promptTitleEl.textContent = `【日本語分から穴埋め（例文）】 No. ${q.wordId}`;
+                    const maskedSentence = q.sentence.replace(/\[(.*?)\]/g, (match, p1) => {
+                        const mask = p1[0] + '─'.repeat(Math.max(0, p1.length - 1));
+                        return `<span class="bg-indigo-50 border-b-2 border-indigo-600 px-2 py-0.5 text-indigo-700 font-mono font-bold">${mask}</span>`;
+                    });
+                    sentenceDisplayEl.innerHTML = maskedSentence;
+                    translationEl.textContent = history ? "（解答済み：確認モード）" : q.translation;
                 } else if (currentTestMode === 'jp-to-en') {
-                    promptTitleEl.textContent = `【日本語から英語】 No. ${q.wordId}`;
+                    promptTitleEl.textContent = `【日本語から英語（書き取り）】 No. ${q.wordId}`;
                     sentenceDisplayEl.textContent = q.sentence;
-                    translationEl.textContent = "この意味になる英単語を入力してください";
-                } else if (currentTestMode === 'en-to-jp') {
-                    promptTitleEl.textContent = `【英語から日本語】 No. ${q.wordId}`;
-                    sentenceDisplayEl.textContent = q.sentence;
-                    translationEl.textContent = "この単語の意味（日本語）を入力してください";
+                    translationEl.textContent = history ? "（解答済み：確認モード）" : "この意味になる英単語を記述で入力してください";
                 }
 
                 const inputEl = document.getElementById('test-input');
-                inputEl.value = '';
-                inputEl.disabled = false;
-                inputEl.focus();
-
-                inputEl.onkeydown = (e) => {
-                    if (e.key === 'Enter' && !isAnswerLocked) {
-                        submitTestAnswer();
-                    }
-                };
+                inputEl.value = history ? history.userAnswer : '';
+                inputEl.disabled = history ? true : false;
+                if (!history) inputEl.focus();
             }
 
-            const feedback = document.getElementById('test-feedback');
-            feedback.classList.add('hidden');
-            feedback.className = "hidden p-4 rounded-xl text-sm font-medium";
-
-            document.getElementById('test-next-btn').classList.add('hidden');
+            // フィードバック表示の復元（過去に答えた問題の場合）
+            if (history) {
+                feedback.classList.remove('hidden');
+                if (history.isCorrect) {
+                    feedback.className = "p-4 rounded-xl text-sm font-medium bg-emerald-50 text-emerald-800 border border-emerald-200";
+                    feedback.innerHTML = `✨ 正解済みです（あなたの回答: ${history.userAnswer}）`;
+                } else {
+                    feedback.className = "p-4 rounded-xl text-sm font-medium bg-rose-50 text-rose-800 border border-rose-200";
+                    feedback.innerHTML = `❌ 不正解でした... 正解は <strong class="underline">${q.correctAnswer}</strong> です（あなたの回答: ${history.userAnswer}）`;
+                }
+                document.getElementById('test-submit-btn').classList.add('hidden');
+                document.getElementById('test-next-btn').classList.remove('hidden');
+            } else {
+                feedback.classList.add('hidden');
+                feedback.className = "hidden p-4 rounded-xl text-sm font-medium";
+                document.getElementById('test-submit-btn').classList.remove('hidden');
+                document.getElementById('test-next-btn').classList.add('hidden');
+            }
         }
+
+        // キーボード操作の全体イベント監視
+        document.addEventListener('keydown', function(e) {
+            const testActiveArea = document.getElementById('test-active-area');
+            if (!testActiveArea || testActiveArea.classList.contains('hidden')) return;
+
+            const nextBtn = document.getElementById('test-next-btn');
+            const isNextVisible = !nextBtn.classList.contains('hidden');
+
+            if (isNextVisible && e.key === 'Enter') {
+                e.preventDefault();
+                nextTestQuestion();
+                return;
+            }
+
+            if (isAnswerLocked) return;
+
+            const isChoice = currentTestMode.startsWith('choice-');
+
+            if (isChoice) {
+                if (['1', '2', '3', '4'].includes(e.key)) {
+                    e.preventDefault();
+                    const index = parseInt(e.key, 10) - 1;
+                    const choiceBtns = document.querySelectorAll('#choice-area button');
+                    if (choiceBtns[index] && !choiceBtns[index].disabled) {
+                        choiceBtns[index].click();
+                    }
+                }
+            } else {
+                const inputEl = document.getElementById('test-input');
+                if (document.activeElement === inputEl && e.key === 'Enter') {
+                    e.preventDefault();
+                    submitTestAnswer();
+                }
+            }
+        });
 
         function submitTestAnswer() {
             if (isAnswerLocked) return;
             const inputEl = document.getElementById('test-input');
-            const userAnswer = inputEl.value.trim();
+            const userAnswer = inputEl.value.trim().toLowerCase();
             if (!userAnswer) return;
 
             const q = testQuestions[testIndex];
-            let isCorrect = false;
+            const correctAnswer = q.correctAnswer.trim().toLowerCase();
 
-            if (currentTestMode === 'fill' || currentTestMode === 'jp-to-en') {
-                isCorrect = (userAnswer.toLowerCase() === q.correctAnswer.toLowerCase());
-            } else {
-                const cleanCorrect = q.correctAnswer.replace(/\s+/g, '');
-                const cleanUser = userAnswer.replace(/\s+/g, '');
-                isCorrect = cleanCorrect.includes(cleanUser) || cleanUser.includes(cleanCorrect);
+            let isCorrect = (userAnswer === correctAnswer);
+            if (!isCorrect && correctAnswer.includes('/')) {
+                const parts = correctAnswer.split('/').map(p => p.trim());
+                if (parts.includes(userAnswer)) isCorrect = true;
             }
 
-            finalizeAnswer(isCorrect, userAnswer);
+            finalizeAnswer(isCorrect, inputEl.value.trim());
         }
 
         function submitChoiceAnswer(userAnswer) {
             if (isAnswerLocked) return;
             const q = testQuestions[testIndex];
-            const isCorrect = (userAnswer === q.correctAnswer);
+            const isCorrect = (userAnswer.trim().toLowerCase() === q.correctAnswer.trim().toLowerCase());
             finalizeAnswer(isCorrect, userAnswer);
         }
 
@@ -855,22 +941,49 @@
 
             const q = testQuestions[testIndex];
 
-            if (isCorrect) {
-                testCorrectCount++;
+            // 履歴に保存（初回回答時のみスコアや統計を加算）
+            if (!testHistory[testIndex]) {
+                if (q.exampleId) {
+                    window.wordManager.updateStats(q.exampleId, isCorrect);
+                } else {
+                    const words = window.wordManager.getWords();
+                    const target = words.find(w => w.id === q.wordId);
+                    if (target && target.examples && target.examples.length > 0) {
+                        window.wordManager.updateStats(target.examples[0].id, isCorrect);
+                    }
+                }
+
+                if (isCorrect) {
+                    testCorrectCount++;
+                }
             }
+
+            testHistory[testIndex] = {
+                answered: true,
+                isCorrect: isCorrect,
+                userAnswer: userAnswer
+            };
 
             const feedback = document.getElementById('test-feedback');
             feedback.classList.remove('hidden');
             if (isCorrect) {
                 feedback.className = "p-4 rounded-xl text-sm font-medium bg-emerald-50 text-emerald-800 border border-emerald-200";
-                feedback.innerHTML = `✨ 正解です！`;
+                feedback.innerHTML = `✨ 正解です！ (Enterキーで次へ)`;
             } else {
                 feedback.className = "p-4 rounded-xl text-sm font-medium bg-rose-50 text-rose-800 border border-rose-200";
-                feedback.innerHTML = `❌ 不正解... 正解は <strong class="underline">${q.correctAnswer}</strong> です（あなたの回答: ${userAnswer}）`;
+                feedback.innerHTML = `❌ 不正解... 正解は <strong class="underline">${q.correctAnswer}</strong> です（あなたの回答: ${userAnswer}） (Enterキーで次へ)`;
             }
 
+            document.getElementById('test-submit-btn').classList.add('hidden');
             document.getElementById('test-next-btn').classList.remove('hidden');
             document.getElementById('test-next-btn').focus();
+        }
+
+        function prevTestQuestion() {
+            if (testIndex > 0) {
+                testIndex--;
+                renderTestQuestion();
+            }
         }
 
         function nextTestQuestion() {
