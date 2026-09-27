@@ -32,7 +32,6 @@
         header {
             transition: padding 0.2s ease, box-shadow 0.2s ease;
         }
-        /* ナビゲーションのオンオフ用クラス */
         header.hide-nav nav {
             display: none !important;
         }
@@ -57,7 +56,6 @@
                     </svg>
                     Vocabulary & Example Master
                 </h1>
-                <!-- ＝ボタン（テスト中やカード中も含め、いつでもナビのオンオフが可能） -->
                 <button onclick="toggleNav()" id="nav-toggle-btn" class="sm:ml-4 bg-indigo-950/60 hover:bg-indigo-800 text-indigo-200 hover:text-white px-2.5 py-1 rounded-lg text-xs font-bold border border-indigo-700 transition flex items-center gap-1 shadow-sm">
                     <span>＝</span> <span class="hidden md:inline">メニュー切替</span>
                 </button>
@@ -86,12 +84,11 @@
                 </div>
 
                 <div class="flex items-center gap-3 flex-wrap">
-                    <!-- 番号による範囲指定 -->
                     <div class="flex items-center gap-2 bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1">
                         <span class="text-xs font-semibold text-slate-600">範囲:</span>
-                        <input type="number" id="list-range-start" value="1" oninput="renderWordList()" class="w-16 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none text-center">
+                        <input type="number" id="list-range-start" value="1" oninput="renderWordList()" class="w-20 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none text-center">
                         <span class="text-xs text-slate-400">〜</span>
-                        <input type="number" id="list-range-end" value="9999" oninput="renderWordList()" class="w-16 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none text-center">
+                        <input type="number" id="list-range-end" value="2300" oninput="renderWordList()" class="w-20 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none text-center">
                     </div>
 
                     <div class="flex items-center gap-1.5">
@@ -114,23 +111,19 @@
         <!-- 2. 3Dフラッシュカードタブ -->
         <section id="view-flashcard" class="hidden space-y-6 max-w-3xl mx-auto">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
-                <!-- 3Dカード設定エリア -->
                 <div id="fc-config-area" class="space-y-6">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                        <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                            3Dフラッシュカード設定
-                        </h2>
+                        <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">3Dフラッシュカード設定</h2>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1.5">開始 No.</label>
-                            <input type="number" id="fc-range-start" value="1" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="number" id="fc-range-start" value="1001" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1.5">終了 No.</label>
-                            <input type="number" id="fc-range-end" value="9999" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="number" id="fc-range-end" value="1106" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                     </div>
 
@@ -153,7 +146,6 @@
                     <button onclick="initFlashcards()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-xl shadow-sm transition text-base">カード学習を開始する</button>
                 </div>
 
-                <!-- 3Dカード実施エリア -->
                 <div id="fc-active-area" class="hidden space-y-6">
                     <div class="flex justify-between items-center pb-2 border-b border-slate-100">
                         <button onclick="resetToFcConfig()" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">&larr; 設定に戻る</button>
@@ -163,10 +155,9 @@
                     <div id="flashcard-container" class="flex flex-col items-center justify-center py-4">
                         <div class="perspective-1000 w-full h-[420px] cursor-pointer" onclick="flipCard()">
                             <div id="fc-card-inner" class="relative w-full h-full duration-500 transform-style-3d shadow-xl rounded-2xl">
-                                <!-- 表面 -->
                                 <div class="absolute inset-0 bg-white border border-slate-200 rounded-2xl p-8 flex flex-col justify-between backface-hidden shadow-sm">
                                     <div class="flex justify-between items-center">
-                                        <span id="fc-no" class="text-sm font-bold text-indigo-600 bg-indigo-50 px-3.5 py-1.5 rounded-full">No. 2</span>
+                                        <span id="fc-no" class="text-sm font-bold text-indigo-600 bg-indigo-50 px-3.5 py-1.5 rounded-full">No. 1001</span>
                                         <span class="text-xs text-slate-400">クリックして裏返す</span>
                                     </div>
                                     <div class="text-center space-y-3 my-auto">
@@ -174,7 +165,6 @@
                                     </div>
                                     <div class="text-center text-xs text-slate-400"></div>
                                 </div>
-                                <!-- 裏面 -->
                                 <div class="absolute inset-0 bg-indigo-800 text-white rounded-2xl p-8 flex flex-col justify-between backface-hidden rotate-y-180 shadow-inner">
                                     <div class="text-xs font-bold text-indigo-200 uppercase tracking-wider" id="fc-back-title">English & Examples</div>
                                     <div class="text-center space-y-2 my-auto">
@@ -198,13 +188,9 @@
         <!-- 3. 確認テストタブ -->
         <section id="view-test" class="hidden space-y-6 max-w-3xl mx-auto">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
-                <!-- テスト設定エリア -->
                 <div id="test-config-area" class="space-y-6">
                     <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-                        <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                            確認テスト設定
-                        </h2>
+                        <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">確認テスト設定</h2>
                     </div>
 
                     <div>
@@ -233,11 +219,11 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1.5">開始 No.</label>
-                            <input type="number" id="test-range-start" value="1" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="number" id="test-range-start" value="1001" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1.5">終了 No.</label>
-                            <input type="number" id="test-range-end" value="9999" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="number" id="test-range-end" value="1106" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                     </div>
 
@@ -254,7 +240,6 @@
                     <button onclick="startTestFromConfig()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-xl shadow-sm transition text-base">テストを開始する</button>
                 </div>
 
-                <!-- テスト実施エリア -->
                 <div id="test-active-area" class="hidden space-y-6">
                     <div class="flex justify-between items-center pb-2 border-b border-slate-100">
                         <button onclick="resetToTestConfig()" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">&larr; 設定画面に戻る</button>
@@ -285,7 +270,6 @@
                     </div>
                 </div>
 
-                <!-- テスト終了エリア -->
                 <div id="test-finished-area" class="hidden text-center py-10 space-y-6">
                     <div class="space-y-2">
                         <h3 class="text-2xl font-bold text-slate-900">テスト完了！</h3>
@@ -315,7 +299,6 @@
                     <button onclick="resetAllStatsConfirm()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 px-4 py-2 rounded-lg text-xs font-bold transition">すべてのデータをリセット</button>
                 </div>
 
-                <!-- 範囲指定の入力エリア -->
                 <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
                     <div class="text-xs font-bold text-slate-700">分析対象の範囲指定 (No.)</div>
                     <div class="flex items-center gap-3 flex-wrap">
@@ -325,12 +308,11 @@
                         </div>
                         <div class="flex items-center gap-1.5">
                             <span class="text-xs font-semibold text-slate-600">終了 No.</span>
-                            <input type="number" id="anal-range-end" value="9999" oninput="renderAnalytics()" class="w-24 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="number" id="anal-range-end" value="2300" oninput="renderAnalytics()" class="w-24 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                     </div>
                 </div>
 
-                <!-- 4つのテスト形式切り替えタブボタン ＆ 成績分析用ソート -->
                 <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-100 pb-4">
                     <div class="flex flex-wrap gap-2">
                         <button onclick="switchAnalyticsMode('choice-en-to-jp')" id="btn-anal-choice-en-to-jp" class="px-3.5 py-2 rounded-xl text-xs font-bold transition bg-indigo-600 text-white shadow-sm">英語 &rarr; 日本語 (選択)</button>
@@ -342,12 +324,11 @@
                         <span class="text-xs font-semibold text-slate-600">並び順:</span>
                         <select id="analytics-sort" onchange="renderAnalytics()" class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                             <option value="id">No. 順</option>
-                            <option value="low-acc">回答率の低い順 (正答率低い順)</option>
+                            <option value="low-acc">正答率の低い順</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- 成績テーブル -->
                 <div class="overflow-x-auto border border-slate-200 rounded-xl">
                     <table class="w-full text-left border-collapse">
                         <thead>
@@ -404,14 +385,36 @@
     <!-- 外部スクリプトの読み込み -->
     <script src="word.js"></script>
     <script>
-        // ＝ボタンによる手動トグル機能（いつでもオンオフ可能）
         function toggleNav() {
             const header = document.getElementById('main-header');
             header.classList.toggle('hide-nav');
             header.classList.toggle('scrolled');
         }
 
-        // タブ切り替え
+        // 全角入力を自動で半角に変換（検索欄・日本語の意味/訳欄は対象外）
+        function toHalfWidth(str) {
+            return str
+                .replace(/[\uFF01-\uFF5E]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0))
+                .replace(/\u3000/g, ' ');
+        }
+        document.addEventListener('input', function(e) {
+            const t = e.target;
+            if (!t || t.tagName !== 'INPUT') return;
+            if (t.type !== 'text' && t.type !== 'number') return;
+            if (t.id === 'search-input') return;
+            if (t.id === 'input-meaning') return;
+            if (t.classList.contains('modal-ex-trans')) return;
+
+            const converted = toHalfWidth(t.value);
+            if (converted !== t.value) {
+                const start = t.selectionStart, end = t.selectionEnd;
+                t.value = converted;
+                if (start !== null && t.setSelectionRange) {
+                    try { t.setSelectionRange(start, end); } catch (err) {}
+                }
+            }
+        });
+
         function switchTab(tabName) {
             ['list', 'flashcard', 'test', 'analytics'].forEach(t => {
                 const view = document.getElementById(`view-${t}`);
@@ -435,13 +438,12 @@
             if (tabName === 'analytics') renderAnalytics();
         }
 
-        // 単語一覧のフィルタリング処理
         function getFilteredWords(sortSelectId = null) {
             const words = window.wordManager.getWords();
-            const startNo = Number(document.getElementById('list-range-start').value) || 1;
+            const startNo = Number(document.getElementById('list-range-start').value) || 1001;
             const endNo = Number(document.getElementById('list-range-end').value) || 9999;
 
-            let list = words.filter(w => Number(w.id) >= startNo && Number(w.id) <= endNo);
+            let list = words.filter(w => w.id >= startNo && w.id <= endNo);
 
             const searchInput = document.getElementById('search-input');
             if (searchInput && searchInput.value.trim() !== '') {
@@ -459,7 +461,7 @@
                 if (sortVal === 'abc') {
                     list.sort((a, b) => a.word.toLowerCase().localeCompare(b.word.toLowerCase()));
                 } else {
-                    list.sort((a, b) => Number(a.id) - Number(b.id));
+                    list.sort((a, b) => a.id - b.id);
                 }
             }
 
@@ -512,7 +514,6 @@
             grid.innerHTML = html;
         }
 
-        // 単語追加・編集モーダル
         function openModal() {
             document.getElementById('modal-title').textContent = '新規単語追加';
             document.getElementById('edit-word-id').value = '';
@@ -526,7 +527,7 @@
         }
 
         function openEditModal(id) {
-            const word = window.wordManager.getWords().find(w => Number(w.id) === Number(id));
+            const word = window.wordManager.getWords().find(w => w.id === id);
             if (!word) return;
             document.getElementById('modal-title').textContent = '単語の編集';
             document.getElementById('edit-word-id').value = word.id;
@@ -590,14 +591,12 @@
             }
             closeModal();
             renderWordList();
-            renderAnalytics();
         }
 
         function deleteWordItem(id) {
             if (confirm('この単語を削除してもよろしいですか？')) {
                 window.wordManager.deleteWord(id);
                 renderWordList();
-                renderAnalytics();
             }
         }
 
@@ -629,7 +628,7 @@
             const orderMode = document.getElementById('fc-order').value;
 
             const allWords = window.wordManager.getWords();
-            let targetWords = allWords.filter(w => Number(w.id) >= startNo && Number(w.id) <= endNo);
+            let targetWords = allWords.filter(w => w.id >= startNo && w.id <= endNo);
 
             if (targetWords.length === 0) {
                 alert('該当する範囲のカードがありません。範囲を確認してください。');
@@ -639,7 +638,7 @@
             if (orderMode === 'random') {
                 fcList = [...targetWords].sort(() => Math.random() - 0.5);
             } else {
-                fcList = [...targetWords].sort((a, b) => Number(a.id) - Number(b.id));
+                fcList = [...targetWords].sort((a, b) => a.id - b.id);
             }
 
             fcIndex = 0;
@@ -747,7 +746,7 @@
             currentTestMode = document.getElementById('test-mode').value;
 
             const allWords = window.wordManager.getWords();
-            const targetWords = allWords.filter(w => Number(w.id) >= startNo && Number(w.id) <= endNo);
+            const targetWords = allWords.filter(w => w.id >= startNo && w.id <= endNo);
 
             let pool = [];
             targetWords.forEach(w => {
@@ -862,7 +861,6 @@
                     `;
                 });
                 document.getElementById('test-review-list').innerHTML = reviewHtml;
-                renderAnalytics();
                 return;
             }
 
@@ -935,13 +933,17 @@
             }
 
             if (history) {
-                feedback.classList.remove('hidden');
-                if (history.isCorrect) {
-                    feedback.className = "p-4 rounded-xl text-sm font-medium bg-emerald-50 text-emerald-800 border border-emerald-200";
-                    feedback.innerHTML = `✨ 正解済みです（あなたの回答: ${history.userAnswer}）`;
+                if (isChoice) {
+                    feedback.classList.add('hidden');
                 } else {
-                    feedback.className = "p-4 rounded-xl text-sm font-medium bg-rose-50 text-rose-800 border border-rose-200";
-                    feedback.innerHTML = `❌ 不正解でした... 正解は <strong class="underline">${q.correctAnswer}</strong> です（あなたの回答: ${history.userAnswer}）`;
+                    feedback.classList.remove('hidden');
+                    if (history.isCorrect) {
+                        feedback.className = "p-4 rounded-xl text-sm font-medium bg-emerald-50 text-emerald-800 border border-emerald-200";
+                        feedback.innerHTML = `✨ 正解済みです（あなたの回答: ${history.userAnswer}）`;
+                    } else {
+                        feedback.className = "p-4 rounded-xl text-sm font-medium bg-rose-50 text-rose-800 border border-rose-200";
+                        feedback.innerHTML = `❌ 不正解でした... 正解は <strong class="underline">${q.correctAnswer}</strong> です（あなたの回答: ${history.userAnswer}）`;
+                    }
                 }
                 document.getElementById('test-submit-btn').classList.add('hidden');
                 document.getElementById('test-next-btn').classList.remove('hidden');
@@ -1020,8 +1022,10 @@
 
             const q = testQuestions[testIndex];
             if (!testHistory[testIndex]) {
-                if (q.exampleId) {
+                if (currentTestMode === 'fill') {
                     window.wordManager.updateStats(q.exampleId, isCorrect, currentTestMode);
+                } else {
+                    window.wordManager.updateStats(q.wordId, isCorrect, currentTestMode);
                 }
                 if (isCorrect) testCorrectCount++;
             }
@@ -1041,13 +1045,18 @@
             });
 
             const feedback = document.getElementById('test-feedback');
-            feedback.classList.remove('hidden');
-            if (isCorrect) {
-                feedback.className = "p-4 rounded-xl text-sm font-medium bg-emerald-50 text-emerald-800 border border-emerald-200";
-                feedback.innerHTML = `✨ 正解です！ (Enterキーで次へ)`;
+            const isChoiceMode = currentTestMode.startsWith('choice-');
+            if (isChoiceMode) {
+                feedback.classList.add('hidden');
             } else {
-                feedback.className = "p-4 rounded-xl text-sm font-medium bg-rose-50 text-rose-800 border border-rose-200";
-                feedback.innerHTML = `❌ 不正解... 正解は <strong class="underline">${q.correctAnswer}</strong> です（あなたの回答: ${userAnswer}） (Enterキーで次へ)`;
+                feedback.classList.remove('hidden');
+                if (isCorrect) {
+                    feedback.className = "p-4 rounded-xl text-sm font-medium bg-emerald-50 text-emerald-800 border border-emerald-200";
+                    feedback.innerHTML = `✨ 正解です！ (Enterキーで次へ)`;
+                } else {
+                    feedback.className = "p-4 rounded-xl text-sm font-medium bg-rose-50 text-rose-800 border border-rose-200";
+                    feedback.innerHTML = `❌ 不正解... 正解は <strong class="underline">${q.correctAnswer}</strong> です（あなたの回答: ${userAnswer}） (Enterキーで次へ)`;
+                }
             }
 
             document.getElementById('test-submit-btn').classList.add('hidden');
@@ -1064,7 +1073,7 @@
             renderTestQuestion();
         }
 
-        // 成績分析制御
+        // 成績分析（安全装置・エラーハンドリング追加版）
         let currentAnalyticsMode = 'choice-en-to-jp';
 
         function switchAnalyticsMode(mode) {
@@ -1080,108 +1089,127 @@
         }
 
         function renderAnalytics() {
-            const startNo = Number(document.getElementById('anal-range-start').value) || 1;
-            const endNo = Number(document.getElementById('anal-range-end').value) || 9999;
+            try {
+                const tbody = document.getElementById('analytics-table-body');
+                if (!tbody) return;
 
-            let words = [...window.wordManager.getWords()];
-            words = words.filter(w => Number(w.id) >= startNo && Number(w.id) <= endNo);
+                const startInput = document.getElementById('anal-range-start');
+                const endInput = document.getElementById('anal-range-end');
+                const sortSelect = document.getElementById('analytics-sort');
 
-            const tbody = document.getElementById('analytics-table-body');
-            const sortVal = document.getElementById('analytics-sort').value;
+                const startNo = startInput ? (Number(startInput.value) || 1001) : 1001;
+                const endNo = endInput ? (Number(endInput.value) || 9999) : 9999;
+                const sortVal = sortSelect ? sortSelect.value : 'id';
 
-            const analyzedWords = words.map(w => {
-                let wordC = 0;
-                let wordInc = 0;
-                let contentHtml = '';
-
-                if (currentAnalyticsMode === 'fill') {
-                    if (w.examples) {
-                        w.examples.forEach(ex => {
-                            const stats = (ex.stats && ex.stats['fill']) ? ex.stats['fill'] : { correctCount: 0, incorrectCount: 0 };
-                            const c = stats.correctCount;
-                            const inc = stats.incorrectCount;
-                            wordC += c;
-                            wordInc += inc;
-                            const total = c + inc;
-                            const rate = total > 0 ? Math.round((c / total) * 100) : 0;
-                            const cleanSentence = ex.sentence.replace(/\[(.*?)\]/g, '<span class="text-indigo-600 font-bold">$1</span>');
-
-                            contentHtml += `
-                                <div class="py-2 ${w.examples.indexOf(ex) > 0 ? 'border-t border-slate-100 mt-1.5' : ''}">
-                                    <div class="example-sentence text-xs text-slate-800">${cleanSentence}</div>
-                                    <div class="text-[11px] text-slate-500 pt-0.5">
-                                        正解: ${c}回 / 挑戦数: ${total}回 (<span class="font-bold text-indigo-600">${rate}%</span>)
-                                    </div>
-                                </div>
-                            `;
-                        });
-                    }
-                } else {
-                    const stats = (w.wordStats && w.wordStats[currentAnalyticsMode]) ? w.wordStats[currentAnalyticsMode] : { correctCount: 0, incorrectCount: 0 };
-                    const c = stats.correctCount;
-                    const inc = stats.incorrectCount;
-                    wordC += c;
-                    wordInc += inc;
-                    const total = c + inc;
-                    const rate = total > 0 ? Math.round((c / total) * 100) : 0;
-
-                    contentHtml = `
-                        <div class="py-1">
-                            <div class="text-xs text-slate-500">
-                                正解: ${c}回 / 挑戦数: ${total}回
-                            </div>
-                        </div>
-                    `;
+                if (!window.wordManager || typeof window.wordManager.getWords !== 'function') {
+                    tbody.innerHTML = `<tr><td colspan="3" class="text-center py-8 text-rose-500 font-medium">単語マネージャーの読み込みに失敗しました</td></tr>`;
+                    return;
                 }
 
-                const totalAnswers = wordC + wordInc;
-                const rate = totalAnswers > 0 ? (wordC / totalAnswers) : -1;
+                let words = [...window.wordManager.getWords()];
+                words = words.filter(w => w.id >= startNo && w.id <= endNo);
 
-                return { w, wordC, wordInc, totalAnswers, rate, contentHtml };
-            });
+                const analyzedWords = words.map(w => {
+                    let wordC = 0;
+                    let wordInc = 0;
+                    let contentHtml = '';
 
-            if (sortVal === 'low-acc') {
-                analyzedWords.sort((a, b) => {
-                    if (a.rate === -1 && b.rate === -1) return Number(a.w.id) - Number(b.w.id);
-                    if (a.rate === -1) return 1;
-                    if (b.rate === -1) return -1;
-                    return a.rate - b.rate;
+                    if (currentAnalyticsMode === 'fill') {
+                        if (w.examples && Array.isArray(w.examples)) {
+                            w.examples.forEach(ex => {
+                                const stats = (ex.stats && ex.stats['fill']) ? ex.stats['fill'] : { correctCount: 0, incorrectCount: 0 };
+                                const c = stats.correctCount || 0;
+                                const inc = stats.incorrectCount || 0;
+                                wordC += c;
+                                wordInc += inc;
+                                const total = c + inc;
+                                const rate = total > 0 ? Math.round((c / total) * 100) : 0;
+                                const sentenceStr = ex.sentence || '';
+                                const cleanSentence = sentenceStr.replace(/\[(.*?)\]/g, '<span class="text-indigo-600 font-bold">$1</span>');
+
+                                contentHtml += `
+                                    <div class="py-2 ${w.examples.indexOf(ex) > 0 ? 'border-t border-slate-100 mt-1.5' : ''} flex items-start justify-between gap-3">
+                                        <div class="flex-1 min-w-0">
+                                            <div class="example-sentence text-xs text-slate-800">${cleanSentence}</div>
+                                            <div class="text-[11px] text-slate-500 pt-0.5">正解: ${c}回 / 挑戦数: ${total}回</div>
+                                        </div>
+                                        <div class="text-sm sm:text-base font-extrabold text-indigo-600 whitespace-nowrap">${total > 0 ? rate + '%' : '未解答'}</div>
+                                    </div>
+                                `;
+                            });
+                        }
+                    } else {
+                        const stats = (w.wordStats && w.wordStats[currentAnalyticsMode]) ? w.wordStats[currentAnalyticsMode] : { correctCount: 0, incorrectCount: 0 };
+                        const c = stats.correctCount || 0;
+                        const inc = stats.incorrectCount || 0;
+                        wordC += c;
+                        wordInc += inc;
+                        const total = c + inc;
+
+                        contentHtml = `
+                            <div class="py-1">
+                                <div class="text-xs text-slate-500">
+                                    正解: ${c}回 / 挑戦数: ${total}回
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    const totalAnswers = wordC + wordInc;
+                    const rate = totalAnswers > 0 ? (wordC / totalAnswers) : -1;
+
+                    return { w, wordC, wordInc, totalAnswers, rate, contentHtml };
                 });
-            } else {
-                analyzedWords.sort((a, b) => Number(a.w.id) - Number(b.w.id));
+
+                if (sortVal === 'low-acc') {
+                    analyzedWords.sort((a, b) => {
+                        if (a.rate === -1 && b.rate === -1) return a.w.id - b.w.id;
+                        if (a.rate === -1) return 1;
+                        if (b.rate === -1) return -1;
+                        return a.rate - b.rate;
+                    });
+                } else {
+                    analyzedWords.sort((a, b) => a.w.id - b.w.id);
+                }
+
+                if (analyzedWords.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="3" class="text-center py-8 text-slate-400 font-medium">指定した範囲に該当する単語がありません</td></tr>`;
+                    return;
+                }
+
+                let html = '';
+                analyzedWords.forEach(item => {
+                    const w = item.w;
+                    const wordRateDisplay = currentAnalyticsMode === 'fill'
+                        ? ''
+                        : (item.rate >= 0 ? `${Math.round(item.rate * 100)}%` : '未解答');
+
+                    html += `
+                        <tr class="hover:bg-slate-50/50 transition">
+                            <td class="p-3 sm:p-4 align-top font-bold text-indigo-600 text-xs sm:text-sm">No. ${w.id}</td>
+                            <td class="p-3 sm:p-4 align-top">
+                                <div class="font-bold text-slate-900 text-sm sm:text-base">${w.word || ''} <span class="text-xs font-normal text-slate-500 ml-1">(${w.meaning || ''})</span></div>
+                                <div class="mt-1">${item.contentHtml}</div>
+                            </td>
+                            <td class="p-3 sm:p-4 align-top text-right">
+                                <div class="text-sm sm:text-base font-extrabold text-indigo-600">${wordRateDisplay}</div>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tbody.innerHTML = html;
+            } catch (error) {
+                console.error("renderAnalytics Error:", error);
+                const tbody = document.getElementById('analytics-table-body');
+                if (tbody) {
+                    tbody.innerHTML = `<tr><td colspan="3" class="text-center py-8 text-rose-500 font-medium">描画中にエラーが発生しました</td></tr>`;
+                }
             }
-
-            if (analyzedWords.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="text-center py-8 text-slate-400 font-medium">指定した範囲に該当する単語がありません</td></tr>`;
-                return;
-            }
-
-            let html = '';
-            analyzedWords.forEach(item => {
-                const w = item.w;
-                const wordRateDisplay = item.rate >= 0 ? `${Math.round(item.rate * 100)}%` : '未解答';
-
-                html += `
-                    <tr class="hover:bg-slate-50/50 transition">
-                        <td class="p-3 sm:p-4 align-top font-bold text-indigo-600 text-xs sm:text-sm">No. ${w.id}</td>
-                        <td class="p-3 sm:p-4 align-top">
-                            <div class="font-bold text-slate-900 text-sm sm:text-base">${w.word} <span class="text-xs font-normal text-slate-500 ml-1">(${w.meaning})</span></div>
-                            <div class="mt-1">${item.contentHtml}</div>
-                        </td>
-                        <td class="p-3 sm:p-4 align-top text-right">
-                            <div class="text-sm sm:text-base font-extrabold text-indigo-600">${wordRateDisplay}</div>
-                        </td>
-                    </tr>
-                `;
-            });
-
-            tbody.innerHTML = html;
         }
 
-        // 初期化実行
         window.onload = function() {
             renderWordList();
-            renderAnalytics();
         };
     </script>
 </body>
