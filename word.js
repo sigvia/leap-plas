@@ -1492,7 +1492,6 @@ const DEFAULT_WORDS = [
             { id: 11791, sentence: "[undergo] cosmetic surgery", translation: "美容整形手術を受ける" }
         ]
     },
-    ,
     {
         id: 1180,
         word: "seal",
@@ -1828,10 +1827,10 @@ const DEFAULT_WORDS = [
 
 class WordManager {
     constructor() {
-        this.storageKey = 'vocab_app_data_v16';
+        this.storageKey = 'vocab_app_data_v18';
         this.words = this.loadData();
     }
-
+ 
     loadData() {
         const saved = localStorage.getItem(this.storageKey);
         let data = DEFAULT_WORDS;
@@ -1867,19 +1866,19 @@ class WordManager {
                 });
             }
         });
-
+ 
         return data.sort((a, b) => a.id - b.id);
     }
-
+ 
     saveData() {
         this.words.sort((a, b) => a.id - b.id);
         localStorage.setItem(this.storageKey, JSON.stringify(this.words));
     }
-
+ 
     getWords() {
         return this.words;
     }
-
+ 
     addWord(wordData) {
         const maxId = this.words.length > 0 ? Math.max(...this.words.map(w => w.id)) : 1000;
         wordData.id = maxId >= 1000 ? maxId + 1 : 1001;
@@ -1889,7 +1888,7 @@ class WordManager {
             'choice-jp-to-en': { correctCount: 0, incorrectCount: 0 },
             'jp-to-en': { correctCount: 0, incorrectCount: 0 }
         };
-
+ 
         wordData.examples = (wordData.examples || []).map((ex, index) => ({
             id: wordData.id * 10 + (index + 1),
             sentence: ex.sentence,
@@ -1898,11 +1897,11 @@ class WordManager {
                 'fill': { correctCount: 0, incorrectCount: 0 }
             }
         }));
-
+ 
         this.words.push(wordData);
         this.saveData();
     }
-
+ 
     updateWord(id, updatedData) {
         const index = this.words.findIndex(w => w.id === id);
         if (index !== -1) {
@@ -1912,7 +1911,7 @@ class WordManager {
                 'choice-jp-to-en': { correctCount: 0, incorrectCount: 0 },
                 'jp-to-en': { correctCount: 0, incorrectCount: 0 }
             };
-
+ 
             updatedData.examples = (updatedData.examples || []).map((ex, i) => {
                 const matchedOldEx = oldWord.examples && oldWord.examples.find(oe => oe.sentence === ex.sentence);
                 return {
@@ -1928,12 +1927,12 @@ class WordManager {
             this.saveData();
         }
     }
-
+ 
     deleteWord(id) {
         this.words = this.words.filter(w => w.id !== id);
         this.saveData();
     }
-
+ 
     updateStats(targetId, isCorrect, testMode) {
         for (let word of this.words) {
             if (testMode === 'fill') {
@@ -1962,17 +1961,17 @@ class WordManager {
                     if (!word.wordStats[testMode]) {
                         word.wordStats[testMode] = { correctCount: 0, incorrectCount: 0 };
                     }
-
+ 
                     if (isCorrect) word.wordStats[testMode].correctCount++;
                     else word.wordStats[testMode].incorrectCount++;
-
+ 
                     this.saveData();
                     return;
                 }
             }
         }
     }
-
+ 
     resetAllStats() {
         for (let word of this.words) {
             if (word.wordStats) {
@@ -1993,5 +1992,5 @@ class WordManager {
         this.saveData();
     }
 }
-
+ 
 window.wordManager = new WordManager();
