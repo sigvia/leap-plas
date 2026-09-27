@@ -897,7 +897,7 @@ const DEFAULT_WORDS = [
     {
         id: 1103,
         word: "secretary",
-        meaning: "秘書,米国の各省の長,事務局長",
+        meaning: "秘書,長官,事務局長",
         examples: [
             { id: 11031, sentence: "a [secretary] to the president", translation: "社長の秘書" },
             { id: 11032, sentence: "the [Secretary] General", translation: "（国連などの）事務総長" }
@@ -906,7 +906,7 @@ const DEFAULT_WORDS = [
     {
         id: 1104,
         word: "editor",
-        meaning: "新聞・雑誌などの編集者,顧客集業者",
+        meaning: "編集者",
         examples: [
             { id: 11041, sentence: "the [editor] of The Japan News", translation: "『ジャパン・ニュース』の編集長" }
         ]
@@ -925,7 +925,7 @@ const DEFAULT_WORDS = [
         word: "recruit",
         meaning: "団体・組織が〜を新規採用する,新兵,新人",
         examples: [
-            { id: 11061, sentence: "recruit a new band member", translation: "新規のバンドのメンバーを入れる" },
+            { id: 11061, sentence: "[recruit] a new band member", translation: "新規のバンドのメンバーを入れる" },
             { id: 11062, sentence: "a training camp for [recruits]", translation: "新兵訓練所" }
         ]
     },
@@ -980,7 +980,6 @@ const DEFAULT_WORDS = [
         meaning: "剣,刃物と取っ手のついた武器",
         examples: [
             { id: 11211, sentence: "a double-edged [sword]", translation: "諸刃の剣" },
-            { id: 11212, sentence: "the [sword] of Damocles", translation: "ダモクレスの剣（いつ起こるか知れない危険）" }
         ]
     },
     {
@@ -998,7 +997,7 @@ const DEFAULT_WORDS = [
         meaning: "勝利,勝利する",
         examples: [
             { id: 11231, sentence: "her [triumph] in the election", translation: "選挙での彼女の勝利" },
-            { id: 11232, sentence: "Virtue always [triumphs] over vice.", translation: "徳は常に悪に勝つ。" }
+            { id: 11232, sentence: "Virtue always [triumphs] over vice.", translation: "善は常に悪に勝つ。" }
         ]
     },
     {
@@ -1007,7 +1006,6 @@ const DEFAULT_WORDS = [
         meaning: "軍事的な,陸、海、空軍に関する",
         examples: [
             { id: 11241, sentence: "use [military] forces", translation: "軍事力を使う" },
-            { id: 11242, sentence: "a strategy for winning the game", translation: "その試合に勝つための戦略" }
         ]
     },
     {
@@ -1024,7 +1022,7 @@ const DEFAULT_WORDS = [
         meaning: "国や地域を征服する,病気や恐怖などを克服する",
         examples: [
             { id: 11261, sentence: "The Normans [conquered] England in 1066.", translation: "1066年、ノルマン人はイングランドを征服した。" },
-            { id: 11262, sentence: "conquer my fear of the dark", translation: "暗闇に対する恐怖を克服する" }
+            { id: 11262, sentence: "[conquer] my fear of the dark", translation: "暗闇に対する恐怖を克服する" }
         ]
     },
     {
@@ -1033,7 +1031,6 @@ const DEFAULT_WORDS = [
         meaning: "敵から守る,相手の攻撃から守る",
         examples: [
             { id: 11271, sentence: "learn karate to [defend] myself", translation: "自分の身を守るために空手を習う" },
-            { id: 11272, sentence: "Donald is dominated by his wife.", translation: "ドナルドは奥さんに支配されている。" }
         ]
     },
     {
@@ -1056,7 +1053,7 @@ const DEFAULT_WORDS = [
     {
         id: 1130,
         word: "deprive",
-        meaning: "AからBを奪う",
+        meaning: "から奪う",
         examples: [
             { id: 11301, sentence: "Diana was [deprived] of her civil rights.", translation: "ダイアナは公民権を剥奪された。" }
         ]
@@ -1161,7 +1158,7 @@ const DEFAULT_WORDS = [
     {
         id: 1142,
         word: "proceed",
-        meaning: "順を追って〜する,さらに続けて〜する",
+        meaning: "進む,〜する",
         examples: [
             { id: 11421, sentence: "First, please [proceed] to Gate 3.", translation: "まず、3番ゲートへお進みください。" },
             { id: 11422, sentence: "He took off his jacket and [proceeded] to untie his shoelaces.", translation: "彼は上着を脱ぎ、さらに靴ひもをゆるめた。" }
@@ -1170,7 +1167,7 @@ const DEFAULT_WORDS = [
     {
         id: 1143,
         word: "fade",
-        meaning: "色や記憶などが薄れる",
+        meaning: "薄れる",
         examples: [
             { id: 11431, sentence: "Childhood memories [fade] as time passes.", translation: "時が過ぎるとともに子どものころの記憶は薄れる。" }
         ]
@@ -1182,7 +1179,7 @@ const DEFAULT_WORDS = [
         examples: [
             { id: 11441, sentence: "Salt [dissolves] in hot water.", translation: "塩が熱湯に溶ける。" },
             { id: 11442, sentence: "[dissolve] salt in hot water", translation: "熱湯で塩を溶かす" },
-            { id: 11443, sentence: "dissolve the Diet", translation: "国会を解散する" }
+            { id: 11443, sentence: "[dissolve] the Diet", translation: "国会を解散する" }
         ]
     },
     {
@@ -1242,7 +1239,7 @@ const DEFAULT_WORDS = [
     {
         id: 1151,
         word: "revise",
-        meaning: "制度、予測、論文などを修正する,改訂する",
+        meaning: "を修正する,改訂する",
         examples: [
             { id: 11511, sentence: "[revise] the education system", translation: "教育制度を改正する" }
         ]
@@ -1250,7 +1247,7 @@ const DEFAULT_WORDS = [
     {
         id: 1152,
         word: "enhance",
-        meaning: "質、評判などを高める",
+        meaning: "〜を向上させる",
         examples: [
             { id: 11521, sentence: "[enhance] my aesthetic sense", translation: "美意識を磨く（向上させる）" }
         ]
@@ -1302,7 +1299,7 @@ const DEFAULT_WORDS = [
     {
         id: 1158,
         word: "approach",
-        meaning: "空間（時間）的に近づく,接近,〜にどう取り組むか、接近する",
+        meaning: "取り組み方,接近,~に取り組む,接近する",
         examples: [
             { id: 11581, sentence: "a new [approach] to teaching languages", translation: "言語教育への新たな取り組み方" },
             { id: 11582, sentence: "[approach] the problem carefully", translation: "その問題に慎重に取り組む" }
@@ -1311,7 +1308,7 @@ const DEFAULT_WORDS = [
     {
         id: 1159,
         word: "resolve",
-        meaning: "〜を解決する,do (〜する) 決心をする",
+        meaning: "〜を解決する,決心をする",
         examples: [
             { id: 11591, sentence: "[resolve] the problem on my own", translation: "自分でその問題を解決する" },
             { id: 11592, sentence: "After his divorce, he [resolved] to remain single for the rest of his life.", translation: "彼は離婚後、一生独身でいる決心をした。" }
@@ -1320,7 +1317,7 @@ const DEFAULT_WORDS = [
     {
         id: 1160,
         word: "settle",
-        meaning: "紛争などを解決する,〜を置く,据える,定住する,on (〜を) 決める",
+        meaning: "解決する,〜を置く,据える,定住する,決める",
         examples: [
             { id: 11601, sentence: "[settle] the dispute", translation: "その紛争を解決する" },
             { id: 11602, sentence: "[settle] a bag on my shoulder", translation: "バッグを肩にかける（置く）" },
@@ -1339,7 +1336,7 @@ const DEFAULT_WORDS = [
     {
         id: 1162,
         word: "warn",
-        meaning: "〜に警告する,of (against) 〜に対して警告する",
+        meaning: "〜に警告する,警告する",
         examples: [
             { id: 11621, sentence: "[warn] him to follow the rules", translation: "規則に従うように警告する" },
             { id: 11622, sentence: "[warn] of global warming", translation: "地球温暖化を警告する" }
@@ -1348,7 +1345,7 @@ const DEFAULT_WORDS = [
     {
         id: 1163,
         word: "force",
-        meaning: "〜に強いる,力,武力,無理矢理〜させる",
+        meaning: "〜に強いる,力,武力",
         examples: [
             { id: 11631, sentence: "The older kids [forced] him to shoplift.", translation: "年上の子たちが彼に万引きするよう強いた。" },
             { id: 11632, sentence: "the [forces] of nature", translation: "自然の（種々の）力" }
@@ -1357,7 +1354,7 @@ const DEFAULT_WORDS = [
     {
         id: 1164,
         word: "appeal",
-        meaning: "to (〜に) 訴える,魅力,人気,for (〜に) 対する訴え,感情などに訴えかける",
+        meaning: "訴える,魅力,人気,訴え",
         examples: [
             { id: 11641, sentence: "[appeal] to our emotions", translation: "私たちの感情に訴えかける" },
             { id: 11642, sentence: "have a wide [appeal] among young people", translation: "若者に幅広い人気がある" },
@@ -1367,7 +1364,7 @@ const DEFAULT_WORDS = [
     {
         id: 1165,
         word: "applause",
-        meaning: "拍手（不可算）",
+        meaning: "拍手",
         examples: [
             { id: 11651, sentence: "receive hearty [applause]", translation: "心からの拍手をもらう" }
         ]
@@ -1415,7 +1412,7 @@ const DEFAULT_WORDS = [
         meaning: "〜を気絶させる,〜をほう然とさせる",
         examples: [
             { id: 11701, sentence: "[stun] him with a blow", translation: "殴って彼を気絶させる" },
-            { id: 11702, sentence: "be [stunned] at [by] the news", translation: "その知らせを聞いてほう然とする" }
+            { id: 11702, sentence: "be [stunned] at by the news", translation: "その知らせを聞いてほう然とする" }
         ]
     },
     {
@@ -1446,7 +1443,7 @@ const DEFAULT_WORDS = [
     {
         id: 1174,
         word: "react",
-        meaning: "to (〜に) 反応する",
+        meaning: "反応する",
         examples: [
             { id: 11741, sentence: "[react] angrily to the news", translation: "その知らせに怒りの反応を示す（怒って反応する）" }
         ]
@@ -1495,21 +1492,22 @@ const DEFAULT_WORDS = [
             { id: 11791, sentence: "[undergo] cosmetic surgery", translation: "美容整形手術を受ける" }
         ]
     },
+    ,
     {
         id: 1180,
-        word: "incorporate",
-        meaning: "全体の一部とする,取り入れる",
+        word: "seal",
+        meaning: "〜を密封する,印鑑,ハンコ",
         examples: [
-            { id: 11801, sentence: "Many words have been [incorporated] into English from Latin.", translation: "多くの単語がラテン語から英語に取り入れられた。" }
+            { id: 11801, sentence: "a [sealed] container", translation: "密閉容器" },
+            { id: 11802, sentence: "Could you put your personal [seal] here?", translation: "ここに捺印していただけますか。" }
         ]
     },
     {
         id: 1181,
-        word: "seal",
-        meaning: "〜を密封する,印鑑,ハンコ",
+        word: "incorporate",
+        meaning: "全体の一部とする,取り入れる",
         examples: [
-            { id: 11811, sentence: "a [sealed] container", translation: "密閉容器" },
-            { id: 11812, sentence: "Could you put your personal [seal] here?", translation: "ここに捺印していただけますか。" }
+            { id: 11811, sentence: "Many words have been [incorporated] into English from Latin.", translation: "多くの単語がラテン語から英語に取り入れられた。" }
         ]
     },
     {
@@ -1533,7 +1531,7 @@ const DEFAULT_WORDS = [
     {
         id: 1184,
         word: "derive",
-        meaning: "from (〜に) 由来する,〜を引き出す、得る",
+        meaning: "由来する,〜を引き出す、得る",
         examples: [
             { id: 11841, sentence: "This word [derives] from Latin.", translation: "この単語はラテン語に由来する。" },
             { id: 11842, sentence: "[derive] pleasure from reading", translation: "読書から楽しみを得る" }
@@ -1566,7 +1564,7 @@ const DEFAULT_WORDS = [
     {
         id: 1188,
         word: "secure",
-        meaning: "場所、地位などを確保する,安全な,守られて",
+        meaning: "確保する,安全で,守られて",
         examples: [
             { id: 11881, sentence: "[secure] a window seat", translation: "窓側の席を確保する" },
             { id: 11882, sentence: "feel [secure] about the future", translation: "将来に対して安心感をもつ" }
@@ -1575,7 +1573,7 @@ const DEFAULT_WORDS = [
     {
         id: 1189,
         word: "capture",
-        meaning: "〜を捕らえる,捕獲,陣地の攻略",
+        meaning: "〜を捕らえる,捕獲,攻略",
         examples: [
             { id: 11891, sentence: "The monkey that escaped from the zoo was [captured].", translation: "動物園から逃げたサルが捕獲された。" },
             { id: 11892, sentence: "avoid [capture]", translation: "逮捕を逃れる" }
@@ -1584,7 +1582,7 @@ const DEFAULT_WORDS = [
     {
         id: 1190,
         word: "monitor",
-        meaning: "〜を監視する,コンピュータの画面",
+        meaning: "〜を監視する,画面",
         examples: [
             { id: 11901, sentence: "[monitor] my blood pressure", translation: "（一定期間）血圧をチェックする" },
             { id: 11902, sentence: "a high-resolution [monitor]", translation: "高解像度のモニター" }
@@ -1609,8 +1607,8 @@ const DEFAULT_WORDS = [
     },
     {
         id: 1193,
-        word: "inquire",
-        meaning: "into (〜を) 調査,質問,問い合わせ",
+        word: "inquiry",
+        meaning: "調査,質問,問い合わせ",
         examples: [
             { id: 11931, sentence: "an [inquiry] into his background", translation: "彼の身元調査" },
             { id: 11932, sentence: "receive [inquiries] from several companies", translation: "いくつかの会社から問い合わせがある" }
@@ -1619,7 +1617,7 @@ const DEFAULT_WORDS = [
     {
         id: 1194,
         word: "specialize",
-        meaning: "in (英) を専攻する, (米) を専門にする",
+        meaning: "専攻する,専門にする",
         examples: [
             { id: 11941, sentence: "[specialize] in business administration", translation: "経営学を専攻する" },
             { id: 11942, sentence: "[specialize] in imported groceries", translation: "輸入食料雑貨商品を専門に扱う" }
@@ -1631,7 +1629,6 @@ const DEFAULT_WORDS = [
         meaning: "米、日本などの2学期制の学期,3学期制の場合はterm",
         examples: [
             { id: 11951, sentence: "the first [semester]", translation: "前期" },
-            { id: 11952, sentence: "the second [semester]", translation: "後期" }
         ]
     },
     {
@@ -1639,13 +1636,13 @@ const DEFAULT_WORDS = [
         word: "biology",
         meaning: "生物学,生物や生命現象を研究する学問",
         examples: [
-            { id: 11961, sentence: "Biology is the scientific study of living things.", translation: "生物学は生物の科学的な研究です。" }
+            { id: 11961, sentence: "[Biology] is the scientific study of living things.", translation: "生物学は生物の科学的な研究です。" }
         ]
     },
     {
         id: 1197,
         word: "ecology",
-        meaning: "生態学",
+        meaning: "生態(学)",
         examples: [
             { id: 11971, sentence: "the [ecology] of jellyfish", translation: "クラゲの生態" }
         ]
@@ -1653,7 +1650,7 @@ const DEFAULT_WORDS = [
     {
         id: 1198,
         word: "philosophy",
-        meaning: "学問としての哲学（不可算）,人生哲学、考え方（可算）",
+        meaning: "学問としての哲学,人生哲学、考え方",
         examples: [
             { id: 11981, sentence: "the [philosophy] of Aristotle", translation: "アリストテレスの哲学" },
             { id: 11982, sentence: "my [philosophy] of life", translation: "私の人生哲学" }
@@ -1662,7 +1659,7 @@ const DEFAULT_WORDS = [
     {
         id: 1199,
         word: "geography",
-        meaning: "地理学,まれに地形、配置の意味でも使う",
+        meaning: "地理(学)",
         examples: [
             { id: 11991, sentence: "a great discovery in [geography]", translation: "地理上の偉大な発見" }
         ]
@@ -1670,7 +1667,7 @@ const DEFAULT_WORDS = [
     {
         id: 1200,
         word: "institution",
-        meaning: "大学、病院などの機関,結婚などの制度",
+        meaning: "機関,制度",
         examples: [
             { id: 12001, sentence: "educational [institutions]", translation: "教育機関" },
             { id: 12002, sentence: "social [institutions] such as marriage", translation: "結婚などの社会制度" }
@@ -1679,10 +1676,10 @@ const DEFAULT_WORDS = [
     {
         id: 1201,
         word: "faculty",
-        meaning: "生まれ持った能力,大学の学部,大学の全教員",
+        meaning: "能力,学部,大全教員",
         examples: [
             { id: 12011, sentence: "the [faculty] of hearing", translation: "聴力" },
-            { id: 12012, sentence: "the Faculty of Engineering", translation: "工学部" },
+            { id: 12012, sentence: "the [Faculty] of Engineering", translation: "工学部" },
             { id: 12013, sentence: "a [faculty] meeting", translation: "教授会" }
         ]
     },
@@ -1691,7 +1688,7 @@ const DEFAULT_WORDS = [
         word: "intermediate",
         meaning: "授業、教材が中級の,中間ぎの",
         examples: [
-            { id: 12021, sentence: "an [intermediate] [× middle] course", translation: "中級の講座" },
+            { id: 12021, sentence: "an [intermediate] course", translation: "中級の講座" },
             { id: 12022, sentence: "Gray is [intermediate] between black and white.", translation: "灰色は黒と白の中間だ。" }
         ]
     },
@@ -1735,14 +1732,14 @@ const DEFAULT_WORDS = [
         meaning: "用心,警告,3に注意（警告）を与える",
         examples: [
             { id: 12071, sentence: "act with [caution]", translation: "用心して行動する" },
-            { id: 12072, sentence: "Caution! Roadworks!", translation: "注意！道路工事中！" },
+            { id: 12072, sentence: "[Caution]! Roadworks!", translation: "注意！道路工事中！" },
             { id: 12073, sentence: "The coach [cautioned] all the players.", translation: "監督は全選手に注意を与えた。" }
         ]
     },
     {
         id: 1208,
         word: "will",
-        meaning: "意志,遺言,助動詞will（〜するつもりだ）と同系語",
+        meaning: "意志,遺言",
         examples: [
             { id: 12081, sentence: "against my [will]", translation: "意志に反して" },
             { id: 12082, sentence: "make a [will]", translation: "遺言を作成する" }
@@ -1751,7 +1748,7 @@ const DEFAULT_WORDS = [
     {
         id: 1209,
         word: "option",
-        meaning: "選択肢,選択の自由",
+        meaning: "選択肢,選択",
         examples: [
             { id: 12091, sentence: "consider other [options]", translation: "ほかの選択肢を考える" }
         ]
@@ -1759,7 +1756,7 @@ const DEFAULT_WORDS = [
     {
         id: 1210,
         word: "prospect",
-        meaning: "見通し,将来の主観的な見通し",
+        meaning: "見通し",
         examples: [
             { id: 12101, sentence: "I was both excited and worried at the [prospect] of becoming a father.", translation: "自分が父親になることを考えるとうれしくないと同時に不安だった。" }
         ]
@@ -1775,7 +1772,7 @@ const DEFAULT_WORDS = [
     {
         id: 1212,
         word: "intend",
-        meaning: "to do 〜するつもりだ",
+        meaning: "〜するつもりだ",
         examples: [
             { id: 12121, sentence: "[Intend] to see the movie", translation: "その映画を見るつもりだ" }
         ]
@@ -1783,7 +1780,7 @@ const DEFAULT_WORDS = [
     {
         id: 1213,
         word: "suspect",
-        meaning: "that SVではないかと思う,容疑者",
+        meaning: "~ではないかと思う,~に嫌疑をかける,容疑者",
         examples: [
             { id: 12131, sentence: "The police [suspect] that she stole the money.", translation: "警察は彼女がそのお金を盗んだのではないかと思っている。" },
             { id: 12132, sentence: "We [suspect] that man.", translation: "あの男が怪しいと思っている。" },
@@ -1793,7 +1790,7 @@ const DEFAULT_WORDS = [
     {
         id: 1214,
         word: "identify",
-        meaning: "〜を特定する,生物を同定する,A with B（AとB）と同一視する",
+        meaning: "〜を特定する,生物を同定する,と同一視する,一体感を持つ,なりきる",
         examples: [
             { id: 12141, sentence: "[identify] the fingerprints", translation: "その指紋を特定する" },
             { id: 12142, sentence: "Never [identify] happiness with money.", translation: "幸福を金と同一視するな。" },
@@ -1812,7 +1809,7 @@ const DEFAULT_WORDS = [
     {
         id: 1216,
         word: "acknowledge",
-        meaning: "悪事の事実を認める,〜を認める",
+        meaning: "〜を認める",
         examples: [
             { id: 12161, sentence: "[acknowledge] the need for change", translation: "変化の必要性を認める" }
         ]
@@ -1820,7 +1817,7 @@ const DEFAULT_WORDS = [
     {
         id: 1217,
         word: "perceive",
-        meaning: "A as B（AをBだ）と認識する,〜を知覚する",
+        meaning: "を認識する,〜を知覚する",
         examples: [
             { id: 12171, sentence: "[perceive] the discovery as a major breakthrough", translation: "その発見を飛躍的進歩と認識する" },
             { id: 12172, sentence: "[perceive] a change in his expression", translation: "彼の表情の変化に気づく" }
