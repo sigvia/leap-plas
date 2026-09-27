@@ -372,7 +372,7 @@ const DEFAULT_WORDS = [
         word: "forehead",
         meaning: "額,おでこ",
         examples: [
-            { id: 10431, sentence: "I've got a [pimple] on my forehead.", translation: "(私のお)でこにニキビができてきた." }
+            { id: 10431, sentence: "I've got a pimple on my [forehead].", translation: "(私のお)でこにニキビができてきた." }
         ]
     },
     {
