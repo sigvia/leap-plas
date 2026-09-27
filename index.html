@@ -29,25 +29,45 @@
         .rotate-y-180 {
             transform: rotateY(180deg);
         }
+        header {
+            transition: padding 0.2s ease, box-shadow 0.2s ease;
+        }
+        /* ナビゲーションのオンオフ用クラス */
+        header.hide-nav nav {
+            display: none !important;
+        }
+        header.scrolled {
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+        }
+        header.scrolled h1 {
+            font-size: 0.95rem;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col bg-slate-50 text-slate-800">
 
     <!-- ヘッダー -->
-    <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-2.5 flex justify-between items-center">
-            <h1 class="text-lg font-bold tracking-tight flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-                Vocabulary & Example Master
-            </h1>
+    <header id="main-header" class="bg-indigo-900 text-white shadow-md sticky top-0 z-50 py-2.5">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div class="flex items-center justify-between w-full sm:w-auto">
+                <h1 class="text-base sm:text-lg font-bold tracking-tight flex items-center gap-2 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    Vocabulary & Example Master
+                </h1>
+                <!-- ＝ボタン（テスト中やカード中も含め、いつでもナビのオンオフが可能） -->
+                <button onclick="toggleNav()" id="nav-toggle-btn" class="sm:ml-4 bg-indigo-950/60 hover:bg-indigo-800 text-indigo-200 hover:text-white px-2.5 py-1 rounded-lg text-xs font-bold border border-indigo-700 transition flex items-center gap-1 shadow-sm">
+                    <span>＝</span> <span class="hidden md:inline">メニュー切替</span>
+                </button>
+            </div>
             
-            <nav class="flex items-center gap-1.5 bg-indigo-950/50 p-1 rounded-xl border border-indigo-800/60">
-                <button onclick="switchTab('list')" id="tab-btn-list" class="px-3 py-1.5 rounded-lg text-xs font-bold transition bg-white text-indigo-900 shadow-sm">単語一覧</button>
-                <button onclick="switchTab('flashcard')" id="tab-btn-flashcard" class="px-3 py-1.5 rounded-lg text-xs font-medium transition text-indigo-200 hover:text-white">3Dカード</button>
-                <button onclick="switchTab('test')" id="tab-btn-test" class="px-3 py-1.5 rounded-lg text-xs font-medium transition text-indigo-200 hover:text-white">確認テスト</button>
-                <button onclick="switchTab('analytics')" id="tab-btn-analytics" class="px-3 py-1.5 rounded-lg text-xs font-medium transition text-indigo-200 hover:text-white">成績分析</button>
+            <nav id="main-nav" class="flex items-center gap-1 bg-indigo-950/50 p-1 rounded-xl border border-indigo-800/60 overflow-x-auto max-w-full">
+                <button onclick="switchTab('list')" id="tab-btn-list" class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-bold transition bg-white text-indigo-900 shadow-sm whitespace-nowrap">単語一覧</button>
+                <button onclick="switchTab('flashcard')" id="tab-btn-flashcard" class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition text-indigo-200 hover:text-white whitespace-nowrap">3Dカード</button>
+                <button onclick="switchTab('test')" id="tab-btn-test" class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition text-indigo-200 hover:text-white whitespace-nowrap">確認テスト</button>
+                <button onclick="switchTab('analytics')" id="tab-btn-analytics" class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition text-indigo-200 hover:text-white whitespace-nowrap">成績分析</button>
             </nav>
         </div>
     </header>
@@ -58,7 +78,6 @@
         <!-- 1. 単語リストタブ -->
         <section id="view-list" class="space-y-6">
             <div class="flex flex-wrap justify-between items-center gap-4 bg-white p-4 rounded-xl shadow-sm border border-slate-100">
-                <!-- 左側：検索の枠 -->
                 <div class="relative flex-1 max-w-xs">
                     <input type="text" id="search-input" oninput="renderWordList()" placeholder="単語または意味で検索..." class="w-full bg-slate-50 border border-slate-300 rounded-lg pl-9 pr-3 py-1.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -66,14 +85,15 @@
                     </svg>
                 </div>
 
-                <!-- 右側：範囲、並び順、新規単語追加（逆順） -->
                 <div class="flex items-center gap-3 flex-wrap">
-                    <div class="flex items-center gap-1.5">
-                        <span class="text-sm font-semibold text-slate-600">範囲:</span>
-                        <select id="filter-range" onchange="renderWordList()" class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                            <option value="all">すべての範囲</option>
-                        </select>
+                    <!-- 番号による範囲指定 -->
+                    <div class="flex items-center gap-2 bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1">
+                        <span class="text-xs font-semibold text-slate-600">範囲:</span>
+                        <input type="number" id="list-range-start" value="1" oninput="renderWordList()" class="w-16 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none text-center">
+                        <span class="text-xs text-slate-400">〜</span>
+                        <input type="number" id="list-range-end" value="9999" oninput="renderWordList()" class="w-16 bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none text-center">
                     </div>
+
                     <div class="flex items-center gap-1.5">
                         <span class="text-sm font-semibold text-slate-600">並び順:</span>
                         <select id="list-sort" onchange="renderWordList()" class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
@@ -106,11 +126,11 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1.5">開始 No.</label>
-                            <input type="number" id="fc-range-start" value="1001" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="number" id="fc-range-start" value="1" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1.5">終了 No.</label>
-                            <input type="number" id="fc-range-end" value="1106" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="number" id="fc-range-end" value="9999" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                     </div>
 
@@ -154,7 +174,7 @@
                                     </div>
                                     <div class="text-center text-xs text-slate-400"></div>
                                 </div>
-                                <!-- 裏面（薄めのインディゴ＆文字大きめ） -->
+                                <!-- 裏面 -->
                                 <div class="absolute inset-0 bg-indigo-800 text-white rounded-2xl p-8 flex flex-col justify-between backface-hidden rotate-y-180 shadow-inner">
                                     <div class="text-xs font-bold text-indigo-200 uppercase tracking-wider" id="fc-back-title">English & Examples</div>
                                     <div class="text-center space-y-2 my-auto">
@@ -175,7 +195,7 @@
             </div>
         </section>
 
-        <!-- 3. 確認テストタブ（1問ずつ出題） -->
+        <!-- 3. 確認テストタブ -->
         <section id="view-test" class="hidden space-y-6 max-w-3xl mx-auto">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-6">
                 <!-- テスト設定エリア -->
@@ -202,7 +222,7 @@
                             <div class="text-sm font-bold text-indigo-950 flex items-center gap-1.5">
                                 <span class="text-amber-500">⚠️</span> 正答率の低いものに絞るテスト
                             </div>
-                            <p class="text-xs text-slate-600">70%未満・未解答のものを優先적（ランダム）に出題し、足りない場合は70%以上からもランダムに補います</p>
+                            <p class="text-xs text-slate-600">70%未満・未解答のものを優先的に出題します</p>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" id="test-low-acc" class="sr-only peer">
@@ -213,16 +233,16 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1.5">開始 No.</label>
-                            <input type="number" id="test-range-start" value="1001" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="number" id="test-range-start" value="1" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-600 mb-1.5">終了 No.</label>
-                            <input type="number" id="test-range-end" value="1106" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="number" id="test-range-end" value="9999" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-slate-600 mb-1.5">出題問題数 (重複なし)</label>
+                        <label class="block text-xs font-bold text-slate-600 mb-1.5">出題問題数</label>
                         <select id="test-count" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                             <option value="5">5問</option>
                             <option value="10" selected>10問</option>
@@ -234,10 +254,11 @@
                     <button onclick="startTestFromConfig()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-3 rounded-xl shadow-sm transition text-base">テストを開始する</button>
                 </div>
 
-                <!-- テスト実施エリア（1問ずつ） -->
+                <!-- テスト実施エリア -->
                 <div id="test-active-area" class="hidden space-y-6">
-                    <div class="flex justify-between items-center text-xs font-semibold text-slate-500">
-                        <span id="test-progress-text">問題 1 / 10</span>
+                    <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+                        <button onclick="resetToTestConfig()" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">&larr; 設定画面に戻る</button>
+                        <span id="test-progress-text" class="text-xs font-semibold text-slate-500">問題 1 / 10</span>
                     </div>
 
                     <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-6 space-y-3">
@@ -271,13 +292,14 @@
                         <p id="test-score-summary" class="text-slate-600 text-sm">正答数: 0 / 0</p>
                     </div>
 
-                    <!-- 簡易振り返りリスト -->
                     <div class="text-left space-y-3 pt-4 border-t border-slate-100 max-w-xl mx-auto">
                         <h4 class="text-sm font-bold text-slate-800">📋 今回のテスト振り返り</h4>
                         <div id="test-review-list" class="space-y-2"></div>
                     </div>
 
-                    <button onclick="resetToTestConfig()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-medium text-sm transition shadow-sm mt-4">テスト設定に戻る</button>
+                    <div class="flex justify-center gap-3 mt-4">
+                        <button onclick="resetToTestConfig()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-medium text-sm transition shadow-sm">設定画面に戻る</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -291,6 +313,21 @@
                         <p class="text-xs text-slate-500">4つのテスト形式ごとの正確な正答率を個別に切り替えて確認できます。</p>
                     </div>
                     <button onclick="resetAllStatsConfirm()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 px-4 py-2 rounded-lg text-xs font-bold transition">すべてのデータをリセット</button>
+                </div>
+
+                <!-- 範囲指定の入力エリア -->
+                <div class="bg-slate-50 border border-slate-200/80 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
+                    <div class="text-xs font-bold text-slate-700">分析対象の範囲指定 (No.)</div>
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-xs font-semibold text-slate-600">開始 No.</span>
+                            <input type="number" id="anal-range-start" value="1" oninput="renderAnalytics()" class="w-24 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-xs font-semibold text-slate-600">終了 No.</span>
+                            <input type="number" id="anal-range-end" value="9999" oninput="renderAnalytics()" class="w-24 bg-white border border-slate-300 rounded-lg px-3 py-1.5 text-xs font-medium focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- 4つのテスト形式切り替えタブボタン ＆ 成績分析用ソート -->
@@ -310,14 +347,14 @@
                     </div>
                 </div>
 
+                <!-- 成績テーブル -->
                 <div class="overflow-x-auto border border-slate-200 rounded-xl">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-wider">
-                                <th class="p-4 w-24">No.</th>
-                                <th class="p-4 w-48">単語 / 意味</th>
-                                <th class="p-4">選択した形式での成績・詳細</th>
-                                <th class="p-4 w-28 text-right">形式別正答率</th>
+                                <th class="p-3 sm:p-4 w-16 sm:w-24">No.</th>
+                                <th class="p-3 sm:p-4">単語 / 意味 ＆ 成績詳細</th>
+                                <th class="p-3 sm:p-4 w-24 sm:w-32 text-right">正答率</th>
                             </tr>
                         </thead>
                         <tbody id="analytics-table-body" class="divide-y divide-slate-100 text-sm">
@@ -367,6 +404,14 @@
     <!-- 外部スクリプトの読み込み -->
     <script src="word.js"></script>
     <script>
+        // ＝ボタンによる手動トグル機能（いつでもオンオフ可能）
+        function toggleNav() {
+            const header = document.getElementById('main-header');
+            header.classList.toggle('hide-nav');
+            header.classList.toggle('scrolled');
+        }
+
+        // タブ切り替え
         function switchTab(tabName) {
             ['list', 'flashcard', 'test', 'analytics'].forEach(t => {
                 const view = document.getElementById(`view-${t}`);
@@ -375,9 +420,9 @@
                 const btn = document.getElementById(`tab-btn-${t}`);
                 if (btn) {
                     if (t === tabName) {
-                        btn.className = "px-3 py-1.5 rounded-lg text-xs font-bold transition bg-white text-indigo-900 shadow-sm";
+                        btn.className = "px-2.5 sm:px-3 py-1 rounded-lg text-xs font-bold transition bg-white text-indigo-900 shadow-sm whitespace-nowrap";
                     } else {
-                        btn.className = "px-3 py-1.5 rounded-lg text-xs font-medium transition text-indigo-200 hover:text-white";
+                        btn.className = "px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition text-indigo-200 hover:text-white whitespace-nowrap";
                     }
                 }
             });
@@ -390,38 +435,21 @@
             if (tabName === 'analytics') renderAnalytics();
         }
 
-        function updateRangeSelectors() {
+        // 単語一覧のフィルタリング処理
+        function getFilteredWords(sortSelectId = null) {
             const words = window.wordManager.getWords();
-            const el = document.getElementById('filter-range');
-            if (!el) return;
-            const currentVal = el.value;
-            let html = '<option value="all">すべての範囲</option>';
-            for (let i = 0; i < words.length; i += 20) {
-                const chunk = words.slice(i, i + 20);
-                if (chunk.length === 0) continue;
-                html += `<option value="${chunk[0].id}-${chunk[chunk.length-1].id}">No. ${chunk[0].id} 〜 ${chunk[chunk.length-1].id}</option>`;
-            }
-            el.innerHTML = html;
-            el.value = currentVal;
-        }
+            const startNo = Number(document.getElementById('list-range-start').value) || 1;
+            const endNo = Number(document.getElementById('list-range-end').value) || 9999;
 
-        function getFilteredWords(selectId, sortSelectId = null) {
-            const words = window.wordManager.getWords();
-            const selectEl = document.getElementById(selectId);
-            let list = [...words];
-            
-            if (selectEl && selectEl.value !== 'all') {
-                const [start, end] = selectEl.value.split('-').map(Number);
-                list = list.filter(w => w.id >= start && w.id <= end);
-            }
+            let list = words.filter(w => Number(w.id) >= startNo && Number(w.id) <= endNo);
 
             const searchInput = document.getElementById('search-input');
             if (searchInput && searchInput.value.trim() !== '') {
                 const query = searchInput.value.trim().toLowerCase();
                 list = list.filter(w => {
-                    const matchWord = w.word.toLowerCase().includes(query); // 英語なら途中の文字でもヒット
-                    const matchMeaning = w.meaning.toLowerCase().includes(query); // 日本語の意味
-                    const matchId = String(w.id).includes(query); // 番号
+                    const matchWord = w.word.toLowerCase().startsWith(query);
+                    const matchMeaning = w.meaning.toLowerCase().includes(query);
+                    const matchId = String(w.id).includes(query);
                     return matchWord || matchMeaning || matchId;
                 });
             }
@@ -431,7 +459,7 @@
                 if (sortVal === 'abc') {
                     list.sort((a, b) => a.word.toLowerCase().localeCompare(b.word.toLowerCase()));
                 } else {
-                    list.sort((a, b) => a.id - b.id);
+                    list.sort((a, b) => Number(a.id) - Number(b.id));
                 }
             }
 
@@ -439,8 +467,7 @@
         }
 
         function renderWordList() {
-            updateRangeSelectors();
-            const words = getFilteredWords('filter-range', 'list-sort');
+            const words = getFilteredWords('list-sort');
             const grid = document.getElementById('word-grid');
             
             if (words.length === 0) {
@@ -485,6 +512,7 @@
             grid.innerHTML = html;
         }
 
+        // 単語追加・編集モーダル
         function openModal() {
             document.getElementById('modal-title').textContent = '新規単語追加';
             document.getElementById('edit-word-id').value = '';
@@ -498,7 +526,7 @@
         }
 
         function openEditModal(id) {
-            const word = window.wordManager.getWords().find(w => w.id === id);
+            const word = window.wordManager.getWords().find(w => Number(w.id) === Number(id));
             if (!word) return;
             document.getElementById('modal-title').textContent = '単語の編集';
             document.getElementById('edit-word-id').value = word.id;
@@ -562,12 +590,14 @@
             }
             closeModal();
             renderWordList();
+            renderAnalytics();
         }
 
         function deleteWordItem(id) {
             if (confirm('この単語を削除してもよろしいですか？')) {
                 window.wordManager.deleteWord(id);
                 renderWordList();
+                renderAnalytics();
             }
         }
 
@@ -580,7 +610,7 @@
             }
         }
 
-        // 3Dフラッシュカード制御 (範囲指定＆出題順序)
+        // 3Dフラッシュカード制御
         let fcList = [];
         let fcIndex = 0;
         let isFlipped = false;
@@ -588,6 +618,9 @@
         function resetToFcConfig() {
             document.getElementById('fc-config-area').classList.remove('hidden');
             document.getElementById('fc-active-area').classList.add('hidden');
+            
+            const header = document.getElementById('main-header');
+            header.classList.remove('hide-nav', 'scrolled');
         }
 
         function initFlashcards() {
@@ -596,7 +629,7 @@
             const orderMode = document.getElementById('fc-order').value;
 
             const allWords = window.wordManager.getWords();
-            let targetWords = allWords.filter(w => w.id >= startNo && w.id <= endNo);
+            let targetWords = allWords.filter(w => Number(w.id) >= startNo && Number(w.id) <= endNo);
 
             if (targetWords.length === 0) {
                 alert('該当する範囲のカードがありません。範囲を確認してください。');
@@ -606,7 +639,7 @@
             if (orderMode === 'random') {
                 fcList = [...targetWords].sort(() => Math.random() - 0.5);
             } else {
-                fcList = [...targetWords].sort((a, b) => a.id - b.id);
+                fcList = [...targetWords].sort((a, b) => Number(a.id) - Number(b.id));
             }
 
             fcIndex = 0;
@@ -614,6 +647,9 @@
 
             document.getElementById('fc-config-area').classList.add('hidden');
             document.getElementById('fc-active-area').classList.remove('hidden');
+            
+            document.getElementById('main-header').classList.add('hide-nav', 'scrolled');
+
             renderFlashcard();
         }
 
@@ -686,7 +722,7 @@
             renderFlashcard(); 
         }
 
-        // 確認テスト制御（1問ずつ回答・判定方式）
+        // 確認テスト制御
         let testQuestions = [];
         let testIndex = 0;
         let testCorrectCount = 0;
@@ -698,6 +734,9 @@
             document.getElementById('test-config-area').classList.remove('hidden');
             document.getElementById('test-active-area').classList.add('hidden');
             document.getElementById('test-finished-area').classList.add('hidden');
+            
+            const header = document.getElementById('main-header');
+            header.classList.remove('hide-nav', 'scrolled');
         }
 
         function startTestFromConfig() {
@@ -708,7 +747,7 @@
             currentTestMode = document.getElementById('test-mode').value;
 
             const allWords = window.wordManager.getWords();
-            const targetWords = allWords.filter(w => w.id >= startNo && w.id <= endNo);
+            const targetWords = allWords.filter(w => Number(w.id) >= startNo && Number(w.id) <= endNo);
 
             let pool = [];
             targetWords.forEach(w => {
@@ -791,6 +830,9 @@
             document.getElementById('test-config-area').classList.add('hidden');
             document.getElementById('test-active-area').classList.remove('hidden');
             document.getElementById('test-finished-area').classList.add('hidden');
+            
+            document.getElementById('main-header').classList.add('hide-nav', 'scrolled');
+
             renderTestQuestion();
         }
 
@@ -820,6 +862,7 @@
                     `;
                 });
                 document.getElementById('test-review-list').innerHTML = reviewHtml;
+                renderAnalytics();
                 return;
             }
 
@@ -1021,7 +1064,7 @@
             renderTestQuestion();
         }
 
-        // 成績分析
+        // 成績分析制御
         let currentAnalyticsMode = 'choice-en-to-jp';
 
         function switchAnalyticsMode(mode) {
@@ -1037,7 +1080,12 @@
         }
 
         function renderAnalytics() {
-            const words = [...window.wordManager.getWords()];
+            const startNo = Number(document.getElementById('anal-range-start').value) || 1;
+            const endNo = Number(document.getElementById('anal-range-end').value) || 9999;
+
+            let words = [...window.wordManager.getWords()];
+            words = words.filter(w => Number(w.id) >= startNo && Number(w.id) <= endNo);
+
             const tbody = document.getElementById('analytics-table-body');
             const sortVal = document.getElementById('analytics-sort').value;
 
@@ -1059,11 +1107,10 @@
                             const cleanSentence = ex.sentence.replace(/\[(.*?)\]/g, '<span class="text-indigo-600 font-bold">$1</span>');
 
                             contentHtml += `
-                                <div class="py-1.5 ${w.examples.indexOf(ex) > 0 ? 'border-t border-slate-100' : ''}">
+                                <div class="py-2 ${w.examples.indexOf(ex) > 0 ? 'border-t border-slate-100 mt-1.5' : ''}">
                                     <div class="example-sentence text-xs text-slate-800">${cleanSentence}</div>
-                                    <div class="flex justify-between items-center text-[11px] text-slate-500 pt-0.5">
-                                        <span>正解: ${c}回 / 不正解: ${inc}回</span>
-                                        <span class="font-bold text-indigo-600">${rate}%</span>
+                                    <div class="text-[11px] text-slate-500 pt-0.5">
+                                        正解: ${c}回 / 挑戦数: ${total}回 (<span class="font-bold text-indigo-600">${rate}%</span>)
                                     </div>
                                 </div>
                             `;
@@ -1076,14 +1123,12 @@
                     wordC += c;
                     wordInc += inc;
                     const total = c + inc;
-                    const rate = total > 0 ? c / total : 0;
+                    const rate = total > 0 ? Math.round((c / total) * 100) : 0;
 
                     contentHtml = `
-                        <div class="py-1.5">
-                            <div class="text-xs text-slate-600">見出し語・意味での成績</div>
-                            <div class="flex justify-between items-center text-[11px] text-slate-500 pt-0.5">
-                                <span>正解: ${c}回 / 不正解: ${inc}回</span>
-                                <span class="font-bold text-indigo-600">${rate}%</span>
+                        <div class="py-1">
+                            <div class="text-xs text-slate-500">
+                                正解: ${c}回 / 挑戦数: ${total}回
                             </div>
                         </div>
                     `;
@@ -1097,13 +1142,18 @@
 
             if (sortVal === 'low-acc') {
                 analyzedWords.sort((a, b) => {
-                    if (a.rate === -1 && b.rate === -1) return a.w.id - b.w.id;
+                    if (a.rate === -1 && b.rate === -1) return Number(a.w.id) - Number(b.w.id);
                     if (a.rate === -1) return 1;
                     if (b.rate === -1) return -1;
                     return a.rate - b.rate;
                 });
             } else {
-                analyzedWords.sort((a, b) => a.w.id - b.w.id);
+                analyzedWords.sort((a, b) => Number(a.w.id) - Number(b.w.id));
+            }
+
+            if (analyzedWords.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center py-8 text-slate-400 font-medium">指定した範囲に該当する単語がありません</td></tr>`;
+                return;
             }
 
             let html = '';
@@ -1113,17 +1163,13 @@
 
                 html += `
                     <tr class="hover:bg-slate-50/50 transition">
-                        <td class="p-4 align-top font-bold text-indigo-600">No. ${w.id}</td>
-                        <td class="p-4 align-top">
-                            <div class="font-bold text-slate-900">${w.word}</div>
-                            <div class="text-xs text-slate-500 pt-0.5">${w.meaning}</div>
+                        <td class="p-3 sm:p-4 align-top font-bold text-indigo-600 text-xs sm:text-sm">No. ${w.id}</td>
+                        <td class="p-3 sm:p-4 align-top">
+                            <div class="font-bold text-slate-900 text-sm sm:text-base">${w.word} <span class="text-xs font-normal text-slate-500 ml-1">(${w.meaning})</span></div>
+                            <div class="mt-1">${item.contentHtml}</div>
                         </td>
-                        <td class="p-4 align-top">
-                            <div class="space-y-1">${item.contentHtml}</div>
-                        </td>
-                        <td class="p-4 align-top text-right">
-                            <div class="text-base font-extrabold text-indigo-600">${wordRateDisplay}</div>
-                            <div class="text-[11px] text-slate-400">(${item.totalAnswers}回解答)</div>
+                        <td class="p-3 sm:p-4 align-top text-right">
+                            <div class="text-sm sm:text-base font-extrabold text-indigo-600">${wordRateDisplay}</div>
                         </td>
                     </tr>
                 `;
@@ -1132,8 +1178,10 @@
             tbody.innerHTML = html;
         }
 
+        // 初期化実行
         window.onload = function() {
             renderWordList();
+            renderAnalytics();
         };
     </script>
 </body>
