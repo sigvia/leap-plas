@@ -1364,7 +1364,9 @@
             if (m.includes('Email not confirmed')) return 'メール認証が完了していません。新規登録からやり直してください。';
             if (m.includes('already registered')) return 'このメールアドレスはすでに登録されています。';
             if (m.includes('at least 6')) return 'パスワードは6文字以上にしてください。';
-            if (m.includes('not authorized')) return 'メール送信の設定（SMTP）が未完了です。';
+            if (m.includes('sending') && m.includes('email')) return 'メールの送信に失敗しました。SupabaseのSMTP設定（Gmail）が未設定か、入力が間違っている可能性があります。（' + m + '）';
+            if (m.includes('not authorized')) return 'メール送信の設定（SMTP）が未完了です。（' + m + '）';
+            if (m.includes('Failed to fetch')) return 'Supabaseに接続できません。URLとキーの設定、またはネット接続を確認してください。';
             if (m.includes('rate limit') || m.includes('seconds')) return '短時間に何度も送信できません。少し待ってからお試しください。';
             if (m.includes('expired') || m.includes('invalid')) return 'コードが違うか、期限が切れています。';
             return 'エラーが発生しました: ' + m;
