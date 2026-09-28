@@ -52,8 +52,8 @@
 
     <!-- ヘッダー -->
     <header id="main-header" class="bg-indigo-900 text-white shadow-md sticky top-0 z-50 py-2.5">
-        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-2">
-            <div class="flex items-center justify-between w-full sm:w-auto">
+        <div class="max-w-6xl mx-auto px-4 flex flex-wrap justify-between items-center gap-2">
+            <div class="flex items-center gap-2 order-1">
                 <h1 class="text-base sm:text-lg font-bold tracking-tight flex items-center gap-2 transition-all">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -65,12 +65,20 @@
                 </button>
             </div>
             
-            <nav id="main-nav" class="flex items-center gap-1 bg-indigo-950/50 p-1 rounded-xl border border-indigo-800/60 overflow-x-auto max-w-full">
+            <nav id="main-nav" class="order-3 sm:order-2 w-full sm:w-auto flex items-center gap-1 bg-indigo-950/50 p-1 rounded-xl border border-indigo-800/60 overflow-x-auto max-w-full">
                 <button onclick="switchTab('list')" id="tab-btn-list" class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-bold transition bg-white text-indigo-900 shadow-sm whitespace-nowrap">単語一覧</button>
                 <button onclick="switchTab('flashcard')" id="tab-btn-flashcard" class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition text-indigo-200 hover:text-white whitespace-nowrap">3Dカード</button>
                 <button onclick="switchTab('test')" id="tab-btn-test" class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition text-indigo-200 hover:text-white whitespace-nowrap">確認テスト</button>
                 <button onclick="switchTab('analytics')" id="tab-btn-analytics" class="px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium transition text-indigo-200 hover:text-white whitespace-nowrap">成績分析</button>
             </nav>
+
+            <!-- ログイン状態表示（右上） -->
+            <div id="auth-area" class="order-2 sm:order-3 flex items-center gap-2 ml-auto sm:ml-0">
+                <button id="auth-login-btn" onclick="showLoginView()" class="bg-white text-indigo-900 hover:bg-indigo-50 px-3 py-1 rounded-lg text-xs font-bold shadow-sm transition whitespace-nowrap">ログイン</button>
+                <span id="sync-status" class="hidden text-[10px] text-indigo-300 whitespace-nowrap"></span>
+                <span id="auth-user-name" class="hidden text-xs font-bold text-indigo-100 max-w-[8rem] truncate"></span>
+                <button id="auth-logout-btn" onclick="authLogout()" class="hidden bg-indigo-950/60 hover:bg-indigo-800 text-indigo-200 hover:text-white px-2.5 py-1 rounded-lg text-xs font-bold border border-indigo-700 transition whitespace-nowrap">ログアウト</button>
+            </div>
         </div>
     </header>
 
@@ -288,7 +296,7 @@
                     </div>
 
                     <div class="flex justify-center gap-3 mt-4">
-                        <button onclick="startTestFromConfig()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-medium text-sm transition shadow-sm">もう一度</button>
+                        <button onclick="startTestFromConfig()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-medium text-sm transition shadow-sm">もう一度 (Enter)</button>
                         <button onclick="resetToTestConfig()" class="bg-white border border-slate-300 hover:bg-slate-100 text-slate-700 px-6 py-3 rounded-xl font-medium text-sm transition shadow-sm">設定画面に戻る</button>
                     </div>
                 </div>
@@ -351,6 +359,91 @@
                 </div>
             </div>
         </section>
+        <!-- 5. ログイン / 新規登録 -->
+        <section id="view-login" class="hidden max-w-md mx-auto">
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 sm:p-8 space-y-5">
+                <div id="auth-config-warning" class="hidden bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-lg p-3">
+                    ログイン機能が未設定です。index.html 内の SUPABASE_URL と SUPABASE_ANON_KEY を設定してください。
+                </div>
+                <div id="auth-message" class="hidden text-sm rounded-lg p-3"></div>
+
+                <!-- ログイン -->
+                <div id="auth-panel-login" class="space-y-4">
+                    <h2 class="text-xl font-bold text-slate-900 text-center">ログイン</h2>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">メールアドレス</label>
+                        <input type="email" id="login-email" autocomplete="email" placeholder="example@mail.com" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">パスワード</label>
+                        <input type="password" id="login-password" autocomplete="current-password" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <button onclick="authLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl shadow-sm transition text-sm">ログイン</button>
+
+                    <div class="flex items-center gap-3 text-xs text-slate-400">
+                        <div class="flex-1 h-px bg-slate-200"></div>または<div class="flex-1 h-px bg-slate-200"></div>
+                    </div>
+
+                    <button onclick="authGoogle()" class="w-full bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-medium py-2.5 rounded-xl shadow-sm transition text-sm flex items-center justify-center gap-2">
+                        <svg class="h-4 w-4" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.9 2.4 30.4 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7c-.5-1.5-.8-3-.8-4.7s.3-3.2.8-4.7l-7.9-6.1C.9 16.4 0 20.1 0 24s.9 7.6 2.6 10.8l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.8 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
+                        Googleでログイン
+                    </button>
+
+                    <div class="pt-3 border-t border-slate-100">
+                        <button onclick="showAuthPanel('register')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-2.5 rounded-xl transition text-sm">新規登録</button>
+                    </div>
+                </div>
+
+                <!-- 新規登録 -->
+                <div id="auth-panel-register" class="hidden space-y-4">
+                    <h2 class="text-xl font-bold text-slate-900 text-center">新規登録</h2>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">メールアドレス</label>
+                        <input type="email" id="reg-email" autocomplete="email" placeholder="example@mail.com" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">新規パスワード（6文字以上）</label>
+                        <input type="password" id="reg-password" autocomplete="new-password" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">パスワード（再確認）</label>
+                        <input type="password" id="reg-password2" autocomplete="new-password" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">ニックネーム</label>
+                        <input type="text" id="reg-nickname" maxlength="20" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <button onclick="authRegister()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl shadow-sm transition text-sm">送信</button>
+
+                    <div class="flex items-center gap-3 text-xs text-slate-400">
+                        <div class="flex-1 h-px bg-slate-200"></div>または<div class="flex-1 h-px bg-slate-200"></div>
+                    </div>
+
+                    <button onclick="authGoogle()" class="w-full bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-medium py-2.5 rounded-xl shadow-sm transition text-sm flex items-center justify-center gap-2">
+                        <svg class="h-4 w-4" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.9 2.4 30.4 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7c-.5-1.5-.8-3-.8-4.7s.3-3.2.8-4.7l-7.9-6.1C.9 16.4 0 20.1 0 24s.9 7.6 2.6 10.8l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.8 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
+                        Googleで登録
+                    </button>
+
+                    <button onclick="showAuthPanel('login')" class="w-full text-xs text-slate-500 hover:text-slate-700 underline">ログイン画面に戻る</button>
+                </div>
+
+                <!-- 認証コード -->
+                <div id="auth-panel-verify" class="hidden space-y-4">
+                    <h2 class="text-xl font-bold text-slate-900 text-center">メール認証</h2>
+                    <p class="text-sm text-slate-600 text-center"><span id="verify-email-label" class="font-bold"></span> に届いた6桁の番号を入力してください。</p>
+                    <input type="text" id="verify-code" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-3 text-2xl tracking-[0.5em] text-center font-bold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    <button onclick="authVerify()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl shadow-sm transition text-sm">認証する</button>
+                    <button onclick="authResend()" class="w-full text-xs text-indigo-600 hover:text-indigo-800 underline">コードを再送する</button>
+                </div>
+
+                <!-- ニックネーム -->
+                <div id="auth-panel-nickname" class="hidden space-y-4">
+                    <h2 class="text-xl font-bold text-slate-900 text-center">ニックネームを入力</h2>
+                    <input type="text" id="auth-nickname" maxlength="20" placeholder="ニックネーム" class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    <button onclick="authSaveNickname()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl shadow-sm transition text-sm">決定してログイン</button>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- モーダル -->
@@ -390,6 +483,7 @@
     </div>
 
     <!-- 外部スクリプトの読み込み -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="word.js"></script>
     <script>
         function toggleNav() {
@@ -407,9 +501,10 @@
         document.addEventListener('input', function(e) {
             const t = e.target;
             if (!t || t.tagName !== 'INPUT') return;
-            if (t.type !== 'text' && t.type !== 'number') return;
+            if (!['text', 'number', 'email', 'password'].includes(t.type)) return;
             if (t.id === 'search-input') return;
             if (t.id === 'input-meaning') return;
+            if (t.id === 'auth-nickname' || t.id === 'reg-nickname') return;
             if (t.classList.contains('modal-ex-trans')) return;
 
             const converted = toHalfWidth(t.value);
@@ -423,7 +518,7 @@
         });
 
         function switchTab(tabName) {
-            ['list', 'flashcard', 'test', 'analytics'].forEach(t => {
+            ['list', 'flashcard', 'test', 'analytics', 'login'].forEach(t => {
                 const view = document.getElementById(`view-${t}`);
                 if (view) view.classList.add('hidden');
                 
@@ -616,6 +711,8 @@
             }
         }
 
+
+        
         // 3Dフラッシュカード制御
         let fcList = [];
         let fcIndex = 0;
@@ -728,6 +825,8 @@
             renderFlashcard(); 
         }
 
+
+        
         // 確認テスト制御
         let testQuestions = [];
         let testIndex = 0;
@@ -854,7 +953,10 @@
                     const isCor = h ? h.isCorrect : false;
                     const badgeClass = isCor ? "bg-emerald-100 text-emerald-800" : "bg-rose-100 text-rose-800";
                     const icon = isCor ? "✨ 正解" : "❌ 不正解";
-                    const promptText = currentTestMode === 'fill' ? q.sentence : (currentTestMode.includes('en-to-jp') ? q.sentence : `No.${q.wordId} (${q.word})`);
+                    const promptText = q.sentence;
+                    const translationHtml = (currentTestMode === 'fill' && q.translation)
+                        ? `<div class="text-slate-500">訳: ${q.translation}</div>`
+                        : '';
 
                     reviewHtml += `
                         <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs space-y-1">
@@ -863,6 +965,7 @@
                                 <span class="px-2 py-0.5 rounded-full ${badgeClass} font-semibold">${icon}</span>
                             </div>
                             <div class="text-slate-900 font-medium">問題: ${promptText}</div>
+                            ${translationHtml}
                             <div class="text-indigo-600 font-semibold">正解: ${q.correctAnswer}</div>
                         </div>
                     `;
@@ -897,11 +1000,11 @@
                 if (currentTestMode === 'choice-en-to-jp') {
                     promptTitleEl.textContent = `【英語から日本語 (選択)】 No. ${q.wordId}`;
                     sentenceDisplayEl.textContent = q.sentence;
-                    translationEl.textContent = history ? "（解答済み：確認モード）" : "この単語の意味を選んでください (1〜4キーも使用可能)";
+                    translationEl.textContent = history ? "（解答済み：確認モード）" : "この単語の意味を選んでください";
                 } else {
                     promptTitleEl.textContent = `【日本語から英語 (選択)】 No. ${q.wordId}`;
                     sentenceDisplayEl.textContent = q.sentence;
-                    translationEl.textContent = history ? "（解答済み：確認モード）" : "この意味に合う英単語を選んでください (1〜4キーも使用可能)";
+                    translationEl.textContent = history ? "（解答済み：確認モード）" : "この意味に合う英単語を選んでください";
                 }
 
                 let choicesHtml = '';
@@ -946,10 +1049,10 @@
                     feedback.classList.remove('hidden');
                     if (history.isCorrect) {
                         feedback.className = "p-4 rounded-xl text-sm font-medium bg-emerald-50 text-emerald-800 border border-emerald-200";
-                        feedback.innerHTML = `✨ 正解済みです（あなたの回答: ${history.userAnswer}）`;
+                        feedback.innerHTML = `✨ 正解（あなたの回答: ${history.userAnswer}）`;
                     } else {
                         feedback.className = "p-4 rounded-xl text-sm font-medium bg-rose-50 text-rose-800 border border-rose-200";
-                        feedback.innerHTML = `❌ 不正解でした... 正解は <strong class="underline">${q.correctAnswer}</strong> です（あなたの回答: ${history.userAnswer}）`;
+                        feedback.innerHTML = `❌ 不正解 正解は <strong class="underline">${q.correctAnswer}</strong> です（あなたの回答: ${history.userAnswer}）`;
                     }
                 }
                 document.getElementById('test-submit-btn').classList.add('hidden');
@@ -965,6 +1068,16 @@
         document.addEventListener('keydown', function(e) {
             const testActiveArea = document.getElementById('view-test');
             if (!testActiveArea || testActiveArea.classList.contains('hidden')) return;
+
+            const finishedArea = document.getElementById('test-finished-area');
+            if (finishedArea && !finishedArea.classList.contains('hidden')) {
+                if (e.key === 'Enter' && !e.repeat) {
+                    e.preventDefault();
+                    startTestFromConfig();
+                }
+                return;
+            }
+
             const activeArea = document.getElementById('test-active-area');
             if (!activeArea || activeArea.classList.contains('hidden')) return;
 
@@ -1059,10 +1172,10 @@
                 feedback.classList.remove('hidden');
                 if (isCorrect) {
                     feedback.className = "p-4 rounded-xl text-sm font-medium bg-emerald-50 text-emerald-800 border border-emerald-200";
-                    feedback.innerHTML = `✨ 正解です！ (Enterキーで次へ)`;
+                    feedback.innerHTML = `✨ 正解`;
                 } else {
                     feedback.className = "p-4 rounded-xl text-sm font-medium bg-rose-50 text-rose-800 border border-rose-200";
-                    feedback.innerHTML = `❌ 不正解... 正解は <strong class="underline">${q.correctAnswer}</strong> です（あなたの回答: ${userAnswer}） (Enterキーで次へ)`;
+                    feedback.innerHTML = `❌ 不正解... 正解は <strong class="underline">${q.correctAnswer}</strong> です（あなたの回答: ${userAnswer}）`;
                 }
             }
 
@@ -1080,6 +1193,8 @@
             renderTestQuestion();
         }
 
+
+        
         // 成績分析（安全装置・エラーハンドリング追加版）
         let currentAnalyticsMode = 'choice-en-to-jp';
 
@@ -1216,6 +1331,265 @@
         window.onload = function() {
             renderWordList();
         };
+    </script>
+    <script>
+        // ===== ログイン機能 + 成績クラウド同期 (Supabase 無料プラン) =====
+        // Supabaseで作成したプロジェクトの値を設定してください
+        const SUPABASE_URL = 'https://qspomdbesmccsrzuqocx.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_hb2bfXQs1C2CkZwBCrtWZQ_qgIbvRey';
+
+        let sb = null;
+        let currentUser = null;
+        let pendingEmail = '';
+        let pushTimer = null;
+        const K_USER = 'vocab_sync_user';
+        const K_DIRTY = 'vocab_sync_dirty';
+
+        function authConfigured() {
+            return typeof supabase !== 'undefined' && SUPABASE_URL.startsWith('http') && SUPABASE_ANON_KEY.length > 20;
+        }
+
+        function authMessage(text, type) {
+            const el = document.getElementById('auth-message');
+            if (!text) { el.classList.add('hidden'); return; }
+            el.className = 'text-sm rounded-lg p-3 ' + (type === 'ok'
+                ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                : 'bg-rose-50 text-rose-800 border border-rose-200');
+            el.textContent = text;
+        }
+
+        function authErrorText(err) {
+            const m = (err && err.message) ? err.message : '';
+            if (m.includes('Invalid login credentials')) return 'メールアドレスまたはパスワードが違います。';
+            if (m.includes('Email not confirmed')) return 'メール認証が完了していません。新規登録からやり直してください。';
+            if (m.includes('already registered')) return 'このメールアドレスはすでに登録されています。';
+            if (m.includes('at least 6')) return 'パスワードは6文字以上にしてください。';
+            if (m.includes('not authorized')) return 'メール送信の設定（SMTP）が未完了です。';
+            if (m.includes('rate limit') || m.includes('seconds')) return '短時間に何度も送信できません。少し待ってからお試しください。';
+            if (m.includes('expired') || m.includes('invalid')) return 'コードが違うか、期限が切れています。';
+            return 'エラーが発生しました: ' + m;
+        }
+
+        function showAuthPanel(name) {
+            ['login', 'register', 'verify', 'nickname'].forEach(p => {
+                document.getElementById('auth-panel-' + p).classList.toggle('hidden', p !== name);
+            });
+            authMessage('');
+        }
+
+        function showLoginView() {
+            switchTab('login');
+            document.getElementById('auth-config-warning').classList.toggle('hidden', authConfigured());
+            showAuthPanel('login');
+        }
+
+        function updateAuthUI(user) {
+            const nick = user && user.user_metadata ? user.user_metadata.nickname : '';
+            document.getElementById('auth-login-btn').classList.toggle('hidden', !!user);
+            document.getElementById('auth-logout-btn').classList.toggle('hidden', !user);
+            const nameEl = document.getElementById('auth-user-name');
+            nameEl.classList.toggle('hidden', !user);
+            nameEl.textContent = user ? (nick || user.email || '') : '';
+            if (!user) document.getElementById('sync-status').classList.add('hidden');
+        }
+
+        function setSyncStatus(state) {
+            const el = document.getElementById('sync-status');
+            const map = { syncing: '☁ 同期中…', done: '☁ 同期済み', error: '☁ 同期エラー' };
+            el.textContent = map[state] || '';
+            el.classList.toggle('hidden', !map[state]);
+        }
+
+        // ---------- 成績データの同期 ----------
+        function refreshAfterPull() {
+            renderWordList();
+            const av = document.getElementById('view-analytics');
+            if (av && !av.classList.contains('hidden')) renderAnalytics();
+        }
+
+        async function pushNow() {
+            if (!sb || !currentUser) return;
+            setSyncStatus('syncing');
+            const { error } = await sb.from('user_data').upsert({
+                user_id: currentUser.id,
+                data: window.wordManager.getWords(),
+                updated_at: new Date().toISOString()
+            });
+            if (error) { console.error('sync push error', error); setSyncStatus('error'); return; }
+            localStorage.setItem(K_DIRTY, '0');
+            setSyncStatus('done');
+        }
+
+        function schedulePush() {
+            clearTimeout(pushTimer);
+            pushTimer = setTimeout(pushNow, 1500);
+        }
+
+        // 単語データが保存されるたびに呼ばれる（word.js から）
+        window.onWordDataSaved = function() {
+            localStorage.setItem(K_DIRTY, '1');
+            if (currentUser) schedulePush();
+        };
+
+        async function syncFromCloud(user, explicit) {
+            const wm = window.wordManager;
+            const last = localStorage.getItem(K_USER);
+            if (last && last !== user.id) {
+                // この端末に別アカウントの成績が残っている → 破棄して読み込み直す
+                localStorage.removeItem(wm.storageKey);
+                localStorage.setItem(K_DIRTY, '0');
+                localStorage.setItem(K_USER, user.id);
+                location.reload();
+                return;
+            }
+            localStorage.setItem(K_USER, user.id);
+            setSyncStatus('syncing');
+
+            const { data, error } = await sb.from('user_data').select('data').eq('user_id', user.id).maybeSingle();
+            if (error) { console.error('sync pull error', error); setSyncStatus('error'); return; }
+
+            const cloud = data ? data.data : null;
+            const dirty = localStorage.getItem(K_DIRTY) === '1';
+            if (!cloud) { await pushNow(); return; }
+
+            let useCloud = !dirty;
+            if (dirty) {
+                const localHas = wm.hasAnyStats(wm.getWords());
+                const cloudHas = wm.hasAnyStats(cloud);
+                if (explicit && localHas && cloudHas) {
+                    useCloud = confirm('この端末の成績と、アカウントに保存済みの成績があります。\n\nOK：アカウントの成績を使う（この端末の成績は消えます）\nキャンセル：この端末の成績で上書きする');
+                } else if (explicit && !localHas && cloudHas) {
+                    useCloud = true;
+                }
+            }
+
+            if (useCloud) {
+                wm.replaceAll(cloud);
+                localStorage.setItem(K_DIRTY, '0');
+                setSyncStatus('done');
+                refreshAfterPull();
+            } else {
+                await pushNow();
+            }
+        }
+
+        // ---------- ログイン処理 ----------
+        async function handleSignedIn(user, explicit) {
+            currentUser = user;
+            updateAuthUI(user);
+            const hasNick = !!(user.user_metadata && user.user_metadata.nickname);
+            if (!hasNick) {
+                switchTab('login');
+                showAuthPanel('nickname');
+            } else if (explicit) {
+                switchTab('list');
+            }
+            await syncFromCloud(user, explicit);
+        }
+
+        async function authLogin() {
+            if (!authConfigured()) return authMessage('ログイン機能が未設定です。', 'err');
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            if (!email || !password) return authMessage('メールアドレスとパスワードを入力してください。', 'err');
+            const { data, error } = await sb.auth.signInWithPassword({ email, password });
+            if (error) return authMessage(authErrorText(error), 'err');
+            await handleSignedIn(data.user, true);
+        }
+
+        async function authGoogle() {
+            if (!authConfigured()) return authMessage('ログイン機能が未設定です。', 'err');
+            sessionStorage.setItem('oauth_pending', '1');
+            const { error } = await sb.auth.signInWithOAuth({
+                provider: 'google',
+                options: { redirectTo: location.origin + location.pathname }
+            });
+            if (error) { sessionStorage.removeItem('oauth_pending'); authMessage(authErrorText(error), 'err'); }
+        }
+
+        async function authRegister() {
+            if (!authConfigured()) return authMessage('ログイン機能が未設定です。', 'err');
+            const email = document.getElementById('reg-email').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const password2 = document.getElementById('reg-password2').value;
+            const nickname = document.getElementById('reg-nickname').value.trim();
+            if (!email || !password || !password2 || !nickname) return authMessage('すべての項目を入力してください。', 'err');
+            if (password.length < 6) return authMessage('パスワードは6文字以上にしてください。', 'err');
+            if (password !== password2) return authMessage('パスワードが一致しません。', 'err');
+            const { data, error } = await sb.auth.signUp({ email, password, options: { data: { nickname } } });
+            if (error) return authMessage(authErrorText(error), 'err');
+            if (data.user && data.user.identities && data.user.identities.length === 0) {
+                return authMessage('このメールアドレスはすでに登録されています。', 'err');
+            }
+            pendingEmail = email;
+            document.getElementById('verify-email-label').textContent = email;
+            showAuthPanel('verify');
+            authMessage('認証コードを送信しました。', 'ok');
+        }
+
+        async function authVerify() {
+            const token = document.getElementById('verify-code').value.trim();
+            if (token.length !== 6) return authMessage('6桁の番号を入力してください。', 'err');
+            const { data, error } = await sb.auth.verifyOtp({ email: pendingEmail, token, type: 'signup' });
+            if (error) return authMessage(authErrorText(error), 'err');
+            await handleSignedIn(data.user, true);
+        }
+
+        async function authResend() {
+            const { error } = await sb.auth.resend({ type: 'signup', email: pendingEmail });
+            if (error) return authMessage(authErrorText(error), 'err');
+            authMessage('認証コードを再送しました。', 'ok');
+        }
+
+        // Googleログイン直後など、ニックネーム未設定のとき
+        async function authSaveNickname() {
+            const nickname = document.getElementById('auth-nickname').value.trim();
+            if (!nickname) return authMessage('ニックネームを入力してください。', 'err');
+            const { data, error } = await sb.auth.updateUser({ data: { nickname } });
+            if (error) return authMessage(authErrorText(error), 'err');
+            currentUser = data.user;
+            updateAuthUI(data.user);
+            switchTab('list');
+        }
+
+        async function authLogout() {
+            clearTimeout(pushTimer);
+            if (currentUser) await pushNow();
+            if (sb) await sb.auth.signOut();
+            currentUser = null;
+            updateAuthUI(null);
+            switchTab('list');
+        }
+
+        function bindEnter(id, fn) {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); fn(); } });
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            bindEnter('login-email', authLogin);
+            bindEnter('login-password', authLogin);
+            ['reg-email', 'reg-password', 'reg-password2', 'reg-nickname'].forEach(id => bindEnter(id, authRegister));
+            bindEnter('verify-code', authVerify);
+            bindEnter('auth-nickname', authSaveNickname);
+
+            // 認証コード欄は数字のみ
+            document.getElementById('verify-code').addEventListener('input', function() {
+                this.value = toHalfWidth(this.value).replace(/\D/g, '').slice(0, 6);
+            });
+
+            if (!authConfigured()) return;
+            sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const { data } = await sb.auth.getSession();
+            if (data.session) {
+                const explicit = sessionStorage.getItem('oauth_pending') === '1';
+                sessionStorage.removeItem('oauth_pending');
+                handleSignedIn(data.session.user, explicit);
+            }
+            sb.auth.onAuthStateChange((event) => {
+                if (event === 'SIGNED_OUT') { currentUser = null; updateAuthUI(null); }
+            });
+        });
     </script>
 </body>
 </html>
