@@ -372,7 +372,7 @@ const DEFAULT_WORDS = [
         word: "forehead",
         meaning: "額,おでこ",
         examples: [
-            { id: 10431, sentence: "I've got a pimple on my [forehead].", translation: "(私のお)でこにニキビができてきた." }
+            { id: 10431, sentence: "I've got a [pimple] on my forehead.", translation: "(私のお)でこにニキビができてきた." }
         ]
     },
     {
@@ -1873,6 +1873,22 @@ class WordManager {
     saveData() {
         this.words.sort((a, b) => a.id - b.id);
         localStorage.setItem(this.storageKey, JSON.stringify(this.words));
+        if (typeof window.onWordDataSaved === 'function') window.onWordDataSaved(this.words);
+    }
+
+    // クラウドのデータで丸ごと置き換える（同期フックは呼ばない）
+    replaceAll(data) {
+        if (!Array.isArray(data) || data.length === 0) return;
+        localStorage.setItem(this.storageKey, JSON.stringify(data));
+        this.words = this.loadData();
+    }
+
+    // 成績（正解・不正解の回数）が1件でも記録されているか
+    hasAnyStats(data) {
+        return (data || []).some(w =>
+            Object.values(w.wordStats || {}).some(s => (s.correctCount || 0) + (s.incorrectCount || 0) > 0) ||
+            (w.examples || []).some(ex => Object.values(ex.stats || {}).some(s => (s.correctCount || 0) + (s.incorrectCount || 0) > 0))
+        );
     }
  
     getWords() {
